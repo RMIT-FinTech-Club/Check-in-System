@@ -6,10 +6,10 @@ import msal
 # Establish application
 app = Flask('Excel Application', template_folder='pages')
 
-app_id = '838cd31a-8036-42eb-8be7-60be1075351a'
-client_secret = '6c28Q~kkOmQAMbrqtsyh~~Bf3dMb4PNO_hzu.a3C'
-authority_url = 'https://login.microsoftonline.com/common/'
-# authority_url = 'https://login.microsoftonline.com/organizations'
+app_id = '3307a7a4-91a5-458e-b96b-27561f5b8254'
+client_secret = 'd1da3c2d-defc-4b4d-be5e-c2bc4dceaefb'
+# authority_url = 'https://login.microsoftonline.com/common/'
+authority_url = 'https://login.microsoftonline.com/organizations'
 SCOPES = ['User.Read', 'Files.ReadWrite.All', 'Sites.ReadWrite.All']
 TENANT_ID = '75e78411-a083-4bee-8e3a-4557bc59213d'
 base_url = 'https://graph.microsoft.com/v1.0/'
