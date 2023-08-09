@@ -6,14 +6,18 @@ import msal
 # Establish application
 app = Flask('Excel Application', template_folder='pages')
 
-app_id = '3307a7a4-91a5-458e-b96b-27561f5b8254'
-client_secret = 'd1da3c2d-defc-4b4d-be5e-c2bc4dceaefb'
-# authority_url = 'https://login.microsoftonline.com/common/'
-authority_url = 'https://login.microsoftonline.com/organizations'
+# app_id = '838cd31a-8036-42eb-8be7-60be1075351a'
+# client_secret = '7yH8Q~1yYo~lUjnYgB~TNqSUAFmlwvJSz-TYEdnD'
+app_id = 'a68b3650-f37a-432e-8a4d-7ebfd99df02e'
+client_secret = 'Qh98Q~5cVGrRohEPj2QBrUIG_meDhbq00VE0baS-'
+authority_url = 'https://login.microsoftonline.com/common/'
+# authority_url = 'https://login.microsoftonline.com/organizations'
 SCOPES = ['User.Read', 'Files.ReadWrite.All', 'Sites.ReadWrite.All']
-TENANT_ID = '75e78411-a083-4bee-8e3a-4557bc59213d'
+# TENANT_ID = '75e78411-a083-4bee-8e3a-4557bc59213d'
+TENANT_ID = 'a49a182d-cfa2-492c-9c5b-40c42c5571b3'
 base_url = 'https://graph.microsoft.com/v1.0/'
 # end_point = base_url + 'me/drive/root/children'
+redirect_uri = 'https://localhost:8000'
 
 client_instance = msal.ConfidentialClientApplication(
     client_id=app_id,
@@ -31,7 +35,10 @@ def get_authentication_code():
     # Get Access token
     authorization_code = request.args.get('code')  # Auth code for Access token
     access_token = client_instance.acquire_token_by_authorization_code(code=authorization_code, scopes=SCOPES)
-    session['access_token'] = access_token['access_token']
+    # try:
+    session['access_token'] = access_token.get('access_token')
+    # except Exception:
+    #     return access_token
 
     # Save the user data in the session
     session['user'] = {
@@ -39,7 +46,8 @@ def get_authentication_code():
         'access_token': access_token.get('access_token'),
     }
 
-    return render_template('accessToken.html')
+    # return render_template('accessToken.html')
+    return access_token
 
 
 @app.route('/approval')
@@ -50,8 +58,8 @@ def get_admin_consent():
 @app.route('/login')
 def authorize():
     # Check if already logged in
-    if session.get('user') is not None:
-        return f'Hello, {session["user"]["name"]}! You are already logged in.'
+    # if session.get('user') is not None:
+    #     return f'Hello, {session["user"]["name"]}! You are already logged in.'
 
     # Generate Microsoft login url
     authority_request_url = client_instance.get_authorization_request_url(SCOPES)
@@ -113,6 +121,20 @@ def add_data_to_cell():
         return 'Successfully added data'
     else:
         return f'There was an error: {response.json()}'
+
+
+@app.route('/getsites')
+def get_sites():
+    endpoint = base_url + '/me/drives'
+
+    headers = {
+        "Authorization": f'Bearer {session["user"]["access_token"]}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.get(endpoint, headers=headers)
+    # print(response.json())
+    return f'<{response.status_code}>\n {response.json()}'
 
 
 if __name__ == '__main__':
