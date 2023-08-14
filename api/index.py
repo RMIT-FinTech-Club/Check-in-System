@@ -1,6 +1,7 @@
 from flask import Flask
+from controller.test import hello_world
 app = Flask(__name__)
 
 @app.route("/api/python")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def use_hello_world():
+    return hello_world()

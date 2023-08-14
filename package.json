@@ -5,7 +5,7 @@
   "scripts": {
     "flask-dev": "set FLASK_DEBUG=1 && python -m flask --app api/index run -p 5328",
     "next-dev": "next dev",
-    "py-setup":".\\.venv\\Scripts\\activate && pip install -r requirements.txt",
+    "py-setup": ".\\.venv\\Scripts\\activate && pip install -r requirements.txt",
     "dev": "concurrently \"pnpm run next-dev\" \"pnpm run flask-dev\"",
     "build": "next build",
     "start": "next start",
@@ -15,6 +15,7 @@
     "@types/node": "20.1.4",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
+    "antd": "^5.8.3",
     "autoprefixer": "10.4.14",
     "concurrently": "^8.0.1",
     "eslint": "8.40.0",

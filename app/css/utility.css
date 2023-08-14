@@ -1,0 +1,20 @@
+/* Typography */
+.h1 {
+    @apply lg:text-6xl sm:text-5xl text-4xl font-bold leading-normal;
+}
+
+.h2 {
+    @apply lg:text-3xl sm:text-2xl text-xl font-bold leading-normal;
+}
+
+.h3 {
+    @apply lg:text-xl text-base font-semibold leading-normal;
+}
+
+.p {
+    @apply md:text-lg text-base leading-normal tracking-tight text-gray-200;
+}
+
+.content {
+    @apply max-w-[1100px] md:w-[70%] w-[75%] mx-auto;
+}
