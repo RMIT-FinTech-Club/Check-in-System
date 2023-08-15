@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "flask-dev": "set FLASK_DEBUG=1 && python -m flask --app api/index run -p 5328",
+    "flask-dev": "set FLASK_DEBUG=1 && .\\api\\.venv\\Scripts\\python.exe -m flask --app api/index run -p 5328",
     "next-dev": "next dev",
     "py-setup":".\\.venv\\Scripts\\activate && pip install -r requirements.txt",
-    "dev": "concurrently \"pnpm run next-dev\" \"pnpm run flask-dev\"",
+    "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
