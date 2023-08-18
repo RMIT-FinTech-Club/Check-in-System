@@ -18,7 +18,7 @@ export default function HomePage() {
             </div>
             {/*Div contains the images of table and dashboard*/}
             <div className="flex justify-center">
-                <img src="./../homepage.svg" alt="Home page" className="w-screen relative -z-10 bottom-20" />
+                <img src="./../homepage.svg" alt="Home page" className="w-screen relative -z-10 -mt-28 md:-mt-48 lg:-mt-72" />
             </div>
         </div>
     )
