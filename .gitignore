@@ -7,8 +7,10 @@
 api/.venv
 /.venv
 
+
 # testing
 /coverage
+api/.env.local
 
 # next.js
 /.next/
