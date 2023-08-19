@@ -5,13 +5,17 @@
   "scripts": {
     "flask-dev": "set FLASK_DEBUG=1 && .\\api\\.venv\\Scripts\\python.exe -m flask --app api/index run -p 5328",
     "next-dev": "next dev",
-    "py-setup":".\\.venv\\Scripts\\activate && pip install -r requirements.txt",
+    "py-setup": ".\\.venv\\Scripts\\activate && pip install -r requirements.txt",
     "dev": "concurrently \"npm run next-dev\" \"npm run flask-dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.5",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.5",
     "@types/node": "20.1.4",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
