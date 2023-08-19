@@ -10,7 +10,10 @@ module.exports = {
       fontFamily: {
         inter: ['Inter', 'sans-serif']
       },
-      color: {
+      boxShadow: {
+        around: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
+      },
+      colors: {
         white: {
           100: '#F1F1F1', // background color
         },
@@ -19,7 +22,7 @@ module.exports = {
           200: '#595959' // paragraph color
         },
         blue: {
-          100: '096DD9', // blue color
+          100: '#096DD9', // blue color
           200: '#BAE7FF' // light blue
         }
       },
