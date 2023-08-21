@@ -92,7 +92,7 @@ def generate_frames():
         _, buffer = cv2.imencode('.jpg', img2)
         frame_data = buffer.tobytes()
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame_data + b'\r\n')
-    return send_file("./api/assets/images/screenshot.jpg", mimetype='image/jpg')
+    # return send_file("./api/assets/images/screenshot.jpg", mimetype='image/jpg')
 
 @objectDetection_blueprint.route('/video_feed')
 def video_feed():
