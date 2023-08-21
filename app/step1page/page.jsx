@@ -1,5 +1,6 @@
 import './../css/utility.css';
 import './../css/globals.css';
+import { Steps } from 'antd';
 
         // Implement a Steps Bar to announce users which steps they are at 
 function StepsBar({ index }) {
