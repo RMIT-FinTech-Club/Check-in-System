@@ -5,8 +5,8 @@ export const WebcamFeed = () => {
         <>
             <img
                 src={"api/id-detection/video_feed"}
-                width="640"
-                height="480"
+                // width="640"
+                // height="480"
                 alt="Camera Feed"
             />
         </>

@@ -4,6 +4,8 @@ import pytesseract
 from flask import Blueprint, Response, send_file, jsonify
 import os
 import time
+import requests
+import json
 
 objectDetection_blueprint = Blueprint("object-detection", __name__)
 
@@ -72,12 +74,12 @@ def generate_frames():
                 elapsed_time = time.time() - start_time
                 if elapsed_time >= duration_threshold:
                     # Save image
-                    screenshot = frame[(frame_middleY):(frame_middleY + (h // 2) + spacing), (frame_middleX - (w // 2) - spacing):(frame_middleX)]
+                    screenshot = frame[(frame_middleY):(frame_middleY + (h // 2) + spacing), (frame_middleX - (w // 2) - spacing):(frame_middleX + (w // 6))]
 
                     cv2.imwrite("./api/assets/images/screenshot.jpg", screenshot)
                     # Reset timer
                     start_time = None
-                    break
+                    # break
         else:
             # Center of shape is not within center of frame + spacing, draw red rectangle, reset timer
             cv2.rectangle(img2, (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), (0, 0, 255), 2)
@@ -101,9 +103,46 @@ def video_feed():
 @objectDetection_blueprint.route('/get_text')
 def get_text():
     # Read image
-    img = PIL.Image.open("./api/assets/images/screenshot.jpg")
+
+    #Pyteseract OCR 
+    # img = PIL.Image.open("./api/assets/images/screenshot.jpg")
     # Convert image to string
-    text = pytesseract.image_to_string(img, config=myconfig)
+    # text = pytesseract.image_to_string(img, config=myconfig)
     # Print text
-    print(text)
-    return jsonify({ "text": text })
+    # print(text)
+
+    # Space OCR
+    """ OCR.space API request with local file.
+        Python3.5 - not tested on 2.7
+    :param filename: Your file path & name.
+    :param overlay: Is OCR.space overlay required in your response.
+                    Defaults to False.
+    :param api_key: OCR.space API key.
+                    Defaults to 'helloworld'.
+    :param language: Language code to be used in OCR.
+                    List of available language codes can be found on https://ocr.space/OCRAPI
+                    Defaults to 'en'.
+    :return: Result in JSON format.
+    """
+    filename = "./api/assets/images/screenshot.jpg"
+    payload = {'isOverlayRequired': False,
+               'apikey': "K83478507788957",
+               'language': "eng",
+               }
+    with open(filename, 'rb') as f:
+        r = requests.post('https://api.ocr.space/parse/image',
+                          files={filename: f},
+                          data=payload,
+                          )
+    
+    response_data = r.json()
+    results = response_data["ParsedResults"][0]["ParsedText"]
+    # print(results)
+    f.close()
+
+    results = results.replace("\r", "").split("\n")
+    results = results [:2]
+    
+
+
+    return jsonify({"Name" : results[0], "ID" : results[1]})
