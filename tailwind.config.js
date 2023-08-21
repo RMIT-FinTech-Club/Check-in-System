@@ -11,7 +11,7 @@ module.exports = {
         inter: ['Inter', 'sans-serif']
       },
       boxShadow: {
-        around: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
+        around: 'rgba(0, 0, 0, 0.35) 0px 3px 6px'
       },
       colors: {
         white: {
