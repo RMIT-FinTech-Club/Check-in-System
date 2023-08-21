@@ -1,32 +1,7 @@
 import './../css/utility.css';
 import './../css/globals.css';
-import { Steps } from 'antd';
+import StepsBar from '../../components/StepsBar';
 
-        // Implement a Steps Bar to announce users which steps they are at 
-function StepsBar({ index }) {
-    const description = ['Link Excel', 'Set up check-in questions', 'Check-in']
-    return (
-        <Steps
-            current={index}
-            items={[
-                {
-                    title: "In Progress",
-                    description: description[0],
-                },
-                {
-                    title: "Waiting",
-                    description: description[1],
-                },
-                {
-                    title: "Waiting",
-                    description: description[2],
-                }
-            ]}
-        />
-    )
-}
-
-            // Main page
 export default function StepOnePage() {
     return (
         <div className='mx-10 my-20 flex flex-col max-w-screen max-h-screen'>
