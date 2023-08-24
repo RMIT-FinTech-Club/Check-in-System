@@ -8,9 +8,9 @@ export default function Footer() {
           </div>
           {/* Social media */}
           <div className='flex justify-center w-1/3 mx-5'>
-            <span className='flex items-center mx-4'><img src="./../facebook.svg" alt='facebook'/></span>
-            <span className='flex items-center mx-4'><img src="./../tiktok.svg" alt='tiktok'/></span>
-            <span className='flex items-center mx-4'><img src="./../instagram.svg" alt='instagram'/></span>
+            <span className='flex items-center mx-4 cursor-pointer'><img src="./../facebook.svg" alt='facebook'/></span>
+            <span className='flex items-center mx-4 cursor-pointer'><img src="./../tiktok.svg" alt='tiktok'/></span>
+            <span className='flex items-center mx-4 cursor-pointer'><img src="./../instagram.svg" alt='instagram'/></span>
           </div>
         </footer>
     )
