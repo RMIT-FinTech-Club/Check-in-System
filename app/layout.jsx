@@ -1,5 +1,6 @@
-import './css/globals.css'
-import { Button } from 'antd'
+import './css/globals.css';
+import Footer from './components/Footer';
+import StyledComponentsRegistry from '../lib/AntdRegistry';
 
 export const metadata = {
   title: 'Checker',
@@ -9,11 +10,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className=''>
-        {children}
-        <footer className='content'>
-          <Button type='primary'>Test</Button>
-        </footer>
+      <body className='m-0 p-0'>
+        <main className='content'>
+          <StyledComponentsRegistry>
+            {children}
+          </StyledComponentsRegistry>
+        </main>
+        <Footer />
       </body>
     </html>
   )
