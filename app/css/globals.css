@@ -10,3 +10,9 @@
     font-style: normal;
     src: url('/fonts/Jomhuria-Regular.ttf');
 }
+
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    src: url('/fonts/Inter-Regular.ttf');
+}
