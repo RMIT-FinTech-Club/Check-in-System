@@ -1,225 +1,12 @@
 "use client";
 
-import {
-  InputNumber,
-  Button,
-  Card,
-  Switch,
-  Select,
-  Input,
-  DatePicker,
-  Radio,
-  Space,
-} from "antd";
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-// import { Input } from "@mui/material";
-import { useState, useRef } from "react";
+import { InputNumber, Button, Card } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { useState, useRef, useEffect } from "react";
 import StepBar from "../../../components/StepBar";
-
-// Initalizing all the question types, and map it to the selection box
-const questionTypeList = ["Text", "Date", "sID", "Name", "Multiple choice"];
-const typeSelection = questionTypeList.map((type) => {
-  return {
-    value: type,
-    label: type,
-  };
-});
-
-/**
- * A class for storing information of a question object
- * @param {String} title - The title/header of the question
- * @param {String} type - The type of the question, includinng text, date, or multiple choice
- * @param {Boolean} required - Whether this question must be answer or not
- * @param {Array} choice - List of choices for a multiple choice question
- * @param {String} id - ID/key of the question
- */
-class Question {
-  constructor(title, id) {
-    this.title = title;
-    this.type = "Text";
-    this.required = false;
-    this.choice = [];
-    this.id = id;
-  }
-}
-
-/**
- * A react component for displaying and editing multiple choice question
- * @param {Question} question - The desired question for displaying and editing
- */
-
-function MultipleChoice({ question }) {
-  // Storing and manipulating all of the current question's choice
-  const [options, setOptions] = useState(question.choice);
-
-  // Adding new option to the question
-  function addOption() {
-    let mid = [...options];
-    mid.push("Enter option name");
-    setOptions(mid);
-    question.choice = mid;
-  }
-
-  /**
-   * Updating the value of the selected option
-   * @param {Integer} index - the index of the option in the choice array from question object
-   * @param {String} val - the updated value of the question
-   */
-  function updateOption(index, val) {
-    options[index] = val;
-    setOptions([...options]);
-    question.choice = options;
-  }
-
-  /**
-   * Removing an option from the question using the option index
-   * @param {Integer} index - the index of the selected option
-   */
-  function removeOption(index) {
-    let mid = [...options];
-    mid.splice(index, 1);
-    setOptions(mid);
-    question.choice = mid;
-  }
-
-  return (
-    <div className="flex">
-      <Space direction="vertical">
-        {/* Mapping each option into sub components that allow for editing and deleting that option */}
-        {options.map((value, index) => {
-          return (
-            <div className="flex items-center">
-              <Radio disabled></Radio>
-              <Input
-                value={value}
-                bordered={false}
-                onChange={(e) => updateOption(index, e.target.value)}
-              ></Input>
-              <Button
-                onClick={() => {
-                  removeOption(index);
-                }}
-              >
-                <DeleteOutlined />
-              </Button>
-            </div>
-          );
-        })}
-
-        <div className="flex">
-          <Radio disabled></Radio>
-          <Button onClick={addOption}>Add more option</Button>
-        </div>
-      </Space>
-    </div>
-  );
-}
-
-/**
- * A react component to display and edit details of a question
- * @param {Function} changeFocus - a function when call will highlight the current QuestionForm component
- * @param {String} currentFocus - storing the ID of the QuestionForm component that is being highlighted
- * @param {Question} question - store the information of the being displayed question
- * @param {Function} deleteQuestion - a function when call will delete the current QuestionForm component
- */
-
-function QuestionForm({ changeFocus, currentFocus, question, deleteQuestion }) {
-  // Mapping each question type into suitable component for displaying
-  const typeMapping = {
-    Text: (
-      <Input placeholder="Text paragraph" bordered={false} disabled></Input>
-    ),
-    sID: <Input placeholder="Enter your sid" bordered={false} disabled></Input>,
-    Name: (
-      <Input placeholder="Enter your name" bordered={false} disabled></Input>
-    ),
-    Date: <DatePicker className="pb-0" disabled />,
-    "Multiple choice": <MultipleChoice question={question} />,
-  };
-  // const inputRef = useRef(null);
-
-  /**
-   * Will be called during an onclick event on the current QuestionForm component,
-   * which will highlight the component, as well as enabling question editing
-   */
-  function handleFocus() {
-    if (edit == true) return;
-    changeFocus();
-  }
-
-  const [title, setTitle] = useState(question.title);
-  const [type, setType] = useState(question.type);
-  const [required, setRequired] = useState(question.required);
-  const [choice, setChoice] = useState([]);
-
-  // Checking whether the currentFocus is the ID of the current focus, if true then highlight and enable editing
-  let edit = currentFocus == question.id;
-  return (
-    <Card
-      className={`shadow-[0_3px_10px_rgb(0,0,0,0.2)] ${
-        edit && "border-l-8 border-l-blue-100"
-      }`}
-      onClick={handleFocus}
-    >
-      {/* Questions that are being edited */}
-      <div className="flex">
-        <div className=" grow  mr-8 ">
-          {edit ? (
-            <Input
-              bordered={false}
-              className=" mb-4 mt-0 font-bold w-full "
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                question.title = e.target.value;
-              }}
-              label={"Question"}
-            ></Input>
-          ) : (
-            <h3>{title}</h3>
-          )}
-          <br />
-          {/* Mapping the type of question to the suitable answering box */}
-          {typeMapping[type]}
-        </div>
-        {/* Selection box for choosing question type */}
-        <div className=" grow-0">
-          {edit && (
-            <Select
-              size="middle"
-              options={typeSelection}
-              value={type}
-              style={{ width: "200px" }}
-              onChange={(val) => {
-                setType(val);
-                question.type = val;
-              }}
-            ></Select>
-          )}
-        </div>
-      </div>
-      {edit && (
-        <>
-          <hr className=" mt-4" />
-          <div className="flex justify-end items-center">
-            <Button type="text" onClick={deleteQuestion}>
-              <DeleteOutlined />
-            </Button>
-            <p className=" text-black-200 mr-2">Required</p>
-            <Switch
-              checked={required}
-              size="small"
-              onClick={(e) => {
-                question.required = e;
-                setRequired((required) => !required);
-              }}
-            />
-          </div>
-        </>
-      )}
-    </Card>
-  );
-}
+import { useRouter } from "next/navigation";
+import Question from "../../../utils/Question";
+import QuestionForm from "./QuestionForm";
 
 /**
  * A react component represent the whole setup page
@@ -227,10 +14,13 @@ function QuestionForm({ changeFocus, currentFocus, question, deleteQuestion }) {
 export default function Setup() {
   // Storing information of all the questions during setup
   const [questions, setQuestions] = useState([
-    new Question("Your name", "0"),
-    new Question("Your style", "1"),
+    new Question({ title: "Your name", id: "0" }),
+    new Question({ title: "Your style", id: "1" }),
   ]);
+
   const [currentFocus, setCurrentFocus] = useState("-1");
+  const router = useRouter();
+
   /**
    * A function to delete a question base on its id
    * @param {String} id - The id of the wanted question
@@ -251,7 +41,10 @@ export default function Setup() {
    */
   function addQuestion() {
     let last = questions[questions.length - 1];
-    let mid = new Question("Your question", (parseInt(last.id) + 1).toString());
+    let mid = new Question({
+      title: "Your question",
+      id: (parseInt(last.id) + 1).toString(),
+    });
     setQuestions((questions) => [...questions, mid]);
   }
   /**
@@ -260,6 +53,14 @@ export default function Setup() {
    */
   function updateFocus(id) {
     setCurrentFocus(id);
+  }
+
+  /**
+   * A function to store questions information and move to the next step
+   */
+  function finishStep(router) {
+    localStorage.setItem("questions", JSON.stringify(questions));
+    router.push("/excel/checkin");
   }
 
   return (
@@ -312,7 +113,13 @@ export default function Setup() {
             <PlusOutlined />
           </Button>
           <Button className="mx-4 font-bold text-black-200">Previous</Button>
-          <Button type="primary" className="font-bold">
+          <Button
+            type="primary"
+            className="font-bold"
+            onClick={() => {
+              finishStep(router);
+            }}
+          >
             Next
           </Button>
         </div>
