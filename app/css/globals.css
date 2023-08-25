@@ -3,3 +3,8 @@
 @tailwind utilities;
 
 @import url('./utility.css');
+
+@font-face {
+    font-family: 'Inter' ;
+    src: url('/fonts/Inter-Regular.ttf');
+}
