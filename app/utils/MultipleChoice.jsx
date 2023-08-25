@@ -1,4 +1,4 @@
-import Question from "../../../utils/Question";
+import Question from "./Question";
 import { Radio, Input, Button, Space } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useState } from "react";
