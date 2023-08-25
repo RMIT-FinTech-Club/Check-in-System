@@ -20,7 +20,7 @@ export default function StepOnePage() {
                 <div className="flex flex-col w-3/5 my-4">
                     <h2 className='text-left text-gray-500 p-2 m-0 font-inter'>Let's get started</h2>
                     <input type="link" className="text-lg border-transparent rounded-lg p-2 my-2 font-inter" placeholder="Your excel link..."/>
-                    <button type="submit" className=" bg-blue-600 text-white rounded-lg border-transparent text-lg cursor-pointer p-2 my-2 font-inter">Ready</button>
+                    <button type="submit" className=" bg-blue-600 text-white rounded-lg border-transparent text-lg cursor-pointer p-2 my-2 font-inter font-bold">Ready</button>
                 </div>
             </div>
         </div>

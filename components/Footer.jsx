@@ -1,6 +1,6 @@
 export default function Footer() {
     return (
-        <footer className='flex justify-around border border-solid border-gray-300'>
+        <footer className='flex justify-around border border-solid border-gray-300 font-inter'>
           {/* Copyright and Club's name */}
           <div className='flex justify-start w-2/3 mx-10'>
             <span className='flex items-center mx-2'><img src='./../copyright.svg' alt='copyright' /></span>
