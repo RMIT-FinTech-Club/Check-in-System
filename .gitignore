@@ -4,10 +4,11 @@
 /node_modules
 /.pnp
 .pnp.js
-/.venv
+api/.venv
 
 # testing
 /coverage
+api/.env.local
 
 # next.js
 /.next/
