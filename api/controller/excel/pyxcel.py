@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from flask import Blueprint, request, jsonify
 import threading
 # import time
@@ -16,7 +16,7 @@ sys.path.append('../../Ultils')
 pyxcel_bp = Blueprint("pyxcel", __name__)
 pyxcel_thread = threading.local()
 
-load_dotenv("../../.env.local")
+# load_dotenv("../../.env.local")
 
 # excel_url = 'https://rmiteduau.sharepoint.com/:x:/r/sites/RMITFinTechClub2023/Shared%20Documents/2023%20FinTech%20Club%20Master%20Folder/Sem%20B/Departments/Technology/Computer%20Vision%20Project/Book.xlsx?d=wc133eaeca703446686947dd77f977172&csf=1&web=1&e=Tl81AC'
 
