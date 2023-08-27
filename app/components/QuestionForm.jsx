@@ -60,7 +60,8 @@ export default function QuestionForm({
   function handleFocus() {
     if (edit == true) return;
     // inputRef.current.focus({ cursor: "end" });
-    // console.log(inputRef.current);
+    console.log(inputRef.current);
+    inputRef.current.focus();
     changeFocus();
   }
 
@@ -85,8 +86,8 @@ export default function QuestionForm({
           {/* {edit ? ( */}
           <Input
             id={"input" + question.id}
-            // bordered={false}
-            className={`mb-4 mt-0 font-bold w-full ${!edit && "hidden"}`}
+            bordered={edit}
+            className={`mb-4 mt-0 font-bold w-full ${!edit && "h3"}`}
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
@@ -96,7 +97,7 @@ export default function QuestionForm({
             ref={inputRef}
           ></Input>
           {/* ) : ( */}
-          <h3 className={` ${edit && "hidden"}`}>{title}</h3>
+          {/* <h3 className={` ${edit && "hidden"}`}>{title}</h3> */}
           {/* )} */}
           <br />
           {/* Mapping the type of question to the suitable answering box */}
