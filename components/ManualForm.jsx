@@ -1,6 +1,6 @@
 import { Form, Button, Input, DatePicker, Radio, message } from "antd";
-import Question from "../utils/Question";
-import { validatesID, validatesName } from "../utils/formValidator";
+import Question from "@/utils/Question";
+import { validatesID, validatesName } from "@/utils/formValidator";
 
 /**
  * A component for user to manually fill out form for the checkin process

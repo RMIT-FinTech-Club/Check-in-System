@@ -1,11 +1,11 @@
 "use client";
-import StepBar from "../components/StepBar";
 
 import { CameraOutlined } from "@ant-design/icons";
 import { Button, Card, Modal } from "antd";
 import { useState } from "react";
-import Question from "../utils/Question";
-import ManualForm from "../components/ManualForm";
+import ManualForm from "@/components/ManualForm";
+import StepBar from "@/components/StepBar";
+import Question from "@/utils/Question";
 
 /**
  * A react component representing the checkin page
