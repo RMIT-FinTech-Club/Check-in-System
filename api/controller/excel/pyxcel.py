@@ -114,5 +114,13 @@ def test_selenium():
     global global_driver_instance
     if not global_driver_instance:
         return jsonify({'message': 'request failed'})
-    test_text = global_driver_instance.current_url
-    return jsonify({'page_url': test_text})
+
+    canvas_element = global_driver_instance.find_element(By.CSS_SELECTOR, (".ewr-sheettable"))
+
+    cells = canvas_element.find_elements(By.TAG_NAME, 'td')
+
+    for cell in cells:
+        id = cell.get_attribute('id')
+        print(id)
+
+    return jsonify({'page_url': 'Nothing to see here, just saying that this has executed successful'})
