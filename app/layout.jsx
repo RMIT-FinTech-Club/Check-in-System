@@ -1,7 +1,6 @@
 import './css/globals.css';
 import Footer from '@/components/Footer';
 
-
 export const metadata = {
   title: 'Checker',
   description: 'Streamlined Student Check-In Solution',
