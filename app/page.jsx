@@ -1,27 +1,31 @@
 import React from "react";
 import { metadata } from "./layout";
-import "./css/utility.css"
 
 export default function Home() {
   return (
     // Name of the application
-    <div className="">
-      <div className="text-center flex flex-col items-center my-4 py-4">
-        <h1 className="w-full md:w-1/2 lg:w-1/3 text-blue-600 font-inter text-center">{metadata.description}</h1>
-        <h3 className="font-inter">{metadata.label}</h3>
-      </div>
+    <div className="content text-center">
+      <h1 className="text-blue-100 h1 mt-20">{metadata.description}</h1>
+      <h3 className="p mt-5">{metadata.label}</h3>
+
       {/* Input link and Link button*/}
-      <div className="flex justify-center py-4 relative">
-        <span className="absolute inset-y-0 flex items-center left-4"><img src="./../link.svg" alt="link" /></span>
-        <input type="link" className="rounded-xl px-8 py-2 mx-2 text-lg shadow-around w-full border-transparent" placeholder="Connect your Excel link here ..." />
-        <span className="absolute inset-y-0 flex items-center right-4">
-          <button type="submit" className="cursor-pointer px-10 rounded-3xl text-white-100 bg-blue-500 text-lg font-bold border-transparent shadow-around">Link</button>
-        </span>
-      </div>
-      {/*Div contains the images of table and dashboard*/}
-      <div className="flex justify-center">
-        <img src="./../homepage.svg" alt="Home page" className="w-screen relative -z-10 -mt-28 md:-mt-48 lg:-mt-72" />
-      </div>
+    <form>   
+        <div className="relative mt-14">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none focus:none">
+              <svg className="w-5 h-5 text-black-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 19">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.013 7.962a3.519 3.519 0 0 0-4.975 0l-3.554 3.554a3.518 3.518 0 0 0 4.975 4.975l.461-.46m-.461-4.515a3.518 3.518 0 0 0 4.975 0l3.553-3.554a3.518 3.518 0 0 0-4.974-4.975L10.3 3.7"/>
+              </svg>
+            </div>
+            <input type="text" className="block w-full p-4 pl-12 border border-black-200 shadow rounded-lg focus:ring-blue-100 focus:border-blue-100" placeholder="Connect your Excel link here..." required />
+            <button type="submit" className="text-white-100 absolute right-2.5 top-1/2 -translate-y-1/2 bg-blue-100 hover:ring-2 duration-300 focus:outline-none focus:ring-blue-300 rounded-lg px-4 py-2 ">Connect</button>
+        </div>
+    </form>
+
+    <div className="mt-12">
+      <img src="./../homepage.svg" alt="Checkin and Excel automation" />
+    </div>
+    {/* Description image */}
+
     </div>
   )
 }
