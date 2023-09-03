@@ -5,6 +5,7 @@
         "@/components/*": ["components/*"],
         "@/utils/*": ["utils/*"],
         "@/css/*": ["app/css/*"],
+        "@/public/*": ["public/*"],
       }
     }
   }
