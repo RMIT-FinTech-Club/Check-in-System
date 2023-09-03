@@ -1,4 +1,4 @@
-import { Form, Button, Input, DatePicker, Radio, message } from "antd";
+import { Form, Button, Input, DatePicker, Radio, message, Space } from "antd";
 import Question from "@/utils/Question";
 import { validatesID, validatesName } from "@/utils/formValidator";
 
@@ -11,11 +11,22 @@ export default function ManualForm({ questions }) {
 
   // Handling when a form is submitted successfully
   const onFinish = (values) => {
-    console.log("Success:", values);
+    let result = {};
+
+    // Removing id from form input name and return (need updates)
+    for (let [key, value] of Object.entries(values)) {
+      console.log(typeof value);
+      let mid = key.slice(0, key.length - 2);
+      if (!(mid in result)) result[mid] = [];
+      if (typeof value == "object") value = value.format("YYYY-MM-DD HH:mm:ss");
+      result[mid] = [...result[mid], value];
+    }
+    console.log("Success:", result);
     form.resetFields();
     messageApi.open({
       type: "success",
       content: "Submitted successfully",
+      duration: 1.5,
     });
   };
 
@@ -33,7 +44,7 @@ export default function ManualForm({ questions }) {
     Text: <Input placeholder="Enter your text"></Input>,
     sID: <Input placeholder="Enter your sID"></Input>,
     Name: <Input placeholder="Enter your name"></Input>,
-    Date: <DatePicker format={"DD/MM/YYYY"} />,
+    Date: <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />,
   };
 
   return (
@@ -42,13 +53,16 @@ export default function ManualForm({ questions }) {
       {contextHolder}
 
       <Form
+        layout="vertical"
         form={form}
         name="manual input"
         labelCol={{
-          span: 4,
+          span: 22,
+          offset: 1,
         }}
         wrapperCol={{
-          span: 20,
+          offset: 1,
+          span: 22,
         }}
         style={{
           maxWidth: "100%",
@@ -59,12 +73,13 @@ export default function ManualForm({ questions }) {
       >
         {/* Mapping each question into an input field using the question attributes */}
         {questions.map((question) => {
-          let title = question.title;
+          let title = question.title.slice();
           let choices = question.choice;
           return (
             <Form.Item
+              key={question.id}
               label={title.charAt(0).toUpperCase() + title.slice(1)}
-              name={title}
+              name={`${question.title}-${question.id}`} // Combining name with object id to create unique name for form input
               rules={[
                 {
                   required: question.required,
@@ -108,10 +123,10 @@ export default function ManualForm({ questions }) {
 
         <Form.Item
           wrapperCol={{
-            offset: 4,
-            span: 20,
+            offset: 1,
           }}
         >
+          <Space></Space>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
