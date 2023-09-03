@@ -59,9 +59,7 @@ export default function QuestionForm({
    */
   function handleFocus() {
     if (edit == true) return;
-    // inputRef.current.focus({ cursor: "end" });
-    console.log(inputRef.current);
-    inputRef.current.focus();
+    inputRef.current.focus({ cursor: "end" });
     changeFocus();
   }
 
