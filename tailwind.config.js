@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
+        jomhuria: ['Jomhuria', 'cursive']
       },
       boxShadow: {
         around: 'rgba(0, 0, 0, 0.35) 0px 3px 6px'
