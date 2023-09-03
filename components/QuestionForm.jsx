@@ -3,7 +3,6 @@ import MultipleChoice from "@/utils/MultipleChoice";
 
 import {
   Input,
-  Card,
   Switch,
   DatePicker,
   Radio,
@@ -11,8 +10,9 @@ import {
   InputRef,
   Select,
   Button,
+  Form,
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 /**
  * A react component to display and edit details of a question
@@ -29,7 +29,7 @@ export default function QuestionForm({
   deleteQuestion,
 }) {
   // Initalizing all the question types, and map it to the selection box
-  const questionTypeList = ["Text", "Date", "sID", "Name", "Multiple choice"];
+  const questionTypeList = ["sID", "Name", "Text", "Date", "Multiple choice"];
   const typeSelection = questionTypeList.map((type) => {
     return {
       value: type,
@@ -42,13 +42,15 @@ export default function QuestionForm({
     Text: (
       <Input placeholder="Text paragraph" bordered={false} disabled></Input>
     ),
-    sID: <Input placeholder="Enter your sid" bordered={false} disabled></Input>,
+    sID: <Input placeholder="Enter your sID" bordered={false} disabled></Input>,
     Name: (
       <Input placeholder="Enter your name" bordered={false} disabled></Input>
     ),
-    Date: <DatePicker className="pb-0" disabled />,
+    Date: <DatePicker bordered={false} />,
     "Multiple choice": (
-      <MultipleChoice question={question} edit={currentFocus == question.id} />
+      <div className='ml-2'>
+        <MultipleChoice question={question} edit={currentFocus == question.id} />
+      </div>
     ),
   };
   const inputRef = useRef(null);
@@ -73,20 +75,20 @@ export default function QuestionForm({
   let edit = currentFocus == question.id;
 
   return (
-    <Card
-      className={`shadow-[0_3px_10px_rgb(0,0,0,0.2)] ${
+    <div
+      className={`border rounded-lg border-gray-300 shadow p-6 mb-4 ${
         edit && "border-l-8 border-l-blue-100"
       }`}
       onClick={handleFocus}
     >
       {/* Questions that are being edited */}
-      <div className="flex">
-        <div className=" grow  mr-8 ">
+      <div className="flex gap-8">
+        <div className="grow">
           {/* {edit ? ( */}
           <Input
             id={"input" + question.id}
             // bordered={false}
-            className={`mb-4 mt-0 font-bold w-full ${!edit && "hidden"}`}
+            className={`${!edit && "hidden"}`}
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
@@ -95,15 +97,15 @@ export default function QuestionForm({
             label={"Question"}
             ref={inputRef}
           ></Input>
-          {/* ) : ( */}
-          <h3 className={` ${edit && "hidden"}`}>{title}</h3>
-          {/* )} */}
           <br />
+
           {/* Mapping the type of question to the suitable answering box */}
-          {typeMapping[type]}
+          <div className="mt-3 -ml-2">
+            {typeMapping[type]}
+          </div>
         </div>
         {/* Selection box for choosing question type */}
-        <div className=" grow-0">
+        <div className="grow-0">
           {edit && (
             <Select
               size="middle"
@@ -120,23 +122,24 @@ export default function QuestionForm({
       </div>
       {edit && (
         <>
-          <hr className=" mt-4" />
-          <div className="flex justify-end items-center">
-            <Button type="text" onClick={deleteQuestion}>
-              <DeleteOutlined />
+          <hr className="mt-1 mb-3" />
+          <div className="flex justify-end items-center gap-3 text-black-200">
+            <Button type='text' shape="circle" onClick={deleteQuestion} icon={<DeleteOutlined />}>
             </Button>
-            <p className=" text-black-200 mr-2">Required</p>
-            <Switch
-              checked={required}
-              size="small"
-              onClick={(e) => {
-                question.required = e;
-                setRequired((required) => !required);
-              }}
-            />
+            <div>
+              <label className="mr-2">Required</label>
+              <Switch
+                checked={required}
+                size="small"
+                onClick={(e) => {
+                  question.required = e;
+                  setRequired((required) => !required);
+                }}
+              />
+            </div>
           </div>
         </>
       )}
-    </Card>
+    </div>
   );
 }
