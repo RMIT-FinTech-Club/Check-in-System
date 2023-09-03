@@ -2,7 +2,6 @@ import './css/globals.css';
 import Footer from '@/components/Footer';
 import StyledComponentsRegistry from './../lib/AntdRegistry';
 
-
 export const metadata = {
   title: 'Checker',
   description: 'Streamlined Student Check-In Solution',
