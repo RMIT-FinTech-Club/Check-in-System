@@ -7,6 +7,9 @@ import json
 # import pytesseract
 # import PIL.Image
 
+
+# Use the client to make requests to the Vision API
+
 objectDetection_bp = Blueprint("object-detection", __name__)
 
 # Tesseract OCR config
@@ -159,10 +162,18 @@ from google.cloud import vision
 
 @objectDetection_bp.route('/get_text')
 def get_text():
-    """Detects text in the file."""
     from google.cloud import vision
 
-    client = vision.ImageAnnotatorClient()
+    # Set the path to your service account key JSON file
+    key_path = 'api/assets/api_keys/oval-relic-397016-46a089001c8b.json'
+
+    # Initialize the Vision API client with the key
+    client = vision.ImageAnnotatorClient.from_service_account_file(key_path)
+
+    """Detects text in the file."""
+    # from google.cloud import vision
+
+    # client = vision.ImageAnnotatorClient()
 
     path = "./api/assets/images/screenshot.jpg"  # Use forward slashes for path
 
