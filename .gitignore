@@ -40,4 +40,4 @@ next-env.d.ts
 __pycache__
 
 # API Keys
-api/assets/api_keys/*
+api/assets/api_keys/oval-relic-307521-0b9e3e3b7b6f.json
