@@ -2,7 +2,7 @@ import cv2
 from flask import Blueprint, Response, send_file, jsonify
 import os
 import time
-import requests
+# import requests
 import json
 # import pytesseract
 # import PIL.Image
@@ -26,6 +26,7 @@ h, w = template.shape
 methods = [cv2.TM_CCOEFF, cv2.TM_CCOEFF_NORMED, cv2.TM_CCORR,
            cv2.TM_CCOEFF_NORMED, cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]
         
+
 def generate_frames():
     camera = cv2.VideoCapture(0)  # Access the camera (0 for default camera)
 
@@ -77,11 +78,11 @@ def generate_frames():
                 elapsed_time = time.time() - start_time
                 if elapsed_time >= duration_threshold:
                     # Save image
-                    screenshot = frame[(frame_middleY):(frame_middleY + (h // 2) + spacing), (frame_middleX - (w // 2) - spacing):(frame_middleX + (w // 6))]
                     screenshot = frame[(frame_middleY + spacing - 5):(frame_middleY + (h // 2) + spacing), (frame_middleX - (w // 2) - spacing):(frame_middleX + (w // 6))]
 
 
                     cv2.imwrite("./api/assets/images/screenshot.jpg", screenshot)
+
                     # Reset timer
                     start_time = None
                     # break
@@ -105,6 +106,70 @@ def generate_frames():
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+@objectDetection_bp.route('/get_text')
+def get_text():
+    """Detects text in the file."""
+    from google.cloud import vision
+
+    # Set the path to your service account key JSON file
+    key_path = 'api/assets/api-keys/oval-relic-397016-46a089001c8b.json'
+
+    # Initialize the Vision API client with the key
+    client = vision.ImageAnnotatorClient.from_service_account_file(key_path)
+
+    path = "./api/assets/images/screenshot.jpg"
+
+    try:
+        with open(path, "rb") as image_file:
+            content = image_file.read()
+    except FileNotFoundError:
+        print(f"File '{path}' not found.")
+        return jsonify({"error": "File not found."})
+    
+    image = vision.Image(content=content)
+
+    # Set the language hint to English
+    language_hints = ["en"]  # "en" represents English
+
+    response = client.text_detection(image=image, image_context={"language_hints": language_hints})
+    texts = response.text_annotations
+
+    # results = []  # To store the extracted data as dictionaries
+    name = ""
+    id = 0
+
+    for text in texts:
+        description = text.description.strip()  # Remove leading/trailing whitespaces
+
+        # Use regular expressions to extract ID and name
+        import re
+        match = re.match(r'([A-Za-z\s]+)(\d+)', description)
+        if match:
+            name = match.group(1).strip()
+            id = int(match.group(2))
+            # results.append({"id": id, "name": name})
+
+    if response.error.message:
+        raise Exception(
+            "{}\nFor more info on error messages, check: "
+            "https://cloud.google.com/apis/design/errors".format(response.error.message)
+        )
+    
+    try:
+    # Attempt to delete the file
+        os.remove(path)
+        print(f"File '{path}' has been deleted successfully.")
+    except FileNotFoundError:
+        print(f"File '{path}' not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    
+    # Return the results as JSON
+    return jsonify({"Name" : name, "ID" : id})
+
+
+# get_text()
 # @objectDetection_blueprint.route('/get_text')
 # def get_text():
 #     # Read image
@@ -154,61 +219,3 @@ def video_feed():
 
 #     # Pytesseract (Uncomment below for pytesseract return)
 #     # return jsonify({"text": text})
-
-
-# Imports the Google Cloud client library
-from google.cloud import vision
-
-
-@objectDetection_bp.route('/get_text')
-def get_text():
-    from google.cloud import vision
-
-    # Set the path to your service account key JSON file
-    key_path = 'api/assets/oval-relic-397016-46a089001c8b.json'
-
-    # Initialize the Vision API client with the key
-    client = vision.ImageAnnotatorClient.from_service_account_file(key_path)
-
-    """Detects text in the file."""
-    # from google.cloud import vision
-
-    # client = vision.ImageAnnotatorClient()
-
-    path = "./api/assets/images/screenshot.jpg"  # Use forward slashes for path
-
-    with open(path, "rb") as image_file:
-        content = image_file.read()
-
-    image = vision.Image(content=content)
-
-    # Set the language hint to English
-    language_hints = ["en"]  # "en" represents English
-
-    response = client.text_detection(image=image, image_context={"language_hints": language_hints})
-    texts = response.text_annotations
-
-    results = []  # To store the extracted data as dictionaries
-
-    for text in texts:
-        description = text.description.strip()  # Remove leading/trailing whitespaces
-
-        # Use regular expressions to extract ID and name
-        import re
-        match = re.match(r'([A-Za-z\s]+)(\d+)', description)
-        if match:
-            name = match.group(1).strip()
-            id = int(match.group(2))
-            results.append({"id": id, "name": name})
-
-    if response.error.message:
-        raise Exception(
-            "{}\nFor more info on error messages, check: "
-            "https://cloud.google.com/apis/design/errors".format(response.error.message)
-        )
-    
-    # Return the results as JSON
-    return jsonify(results)
-
-
-# get_text()

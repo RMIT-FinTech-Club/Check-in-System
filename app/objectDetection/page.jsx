@@ -1,5 +1,7 @@
 "use client"
 import { WebcamFeed } from "../../components/ObjectDetection";
+import { TextDisplay } from "../../components/GetText";
+import { useState, useEffect } from 'react';
 
 export default function Page() {
 
@@ -7,6 +9,7 @@ export default function Page() {
         <div className="content">
             <h1>Camera Feed</h1>
             <WebcamFeed />
+            <TextDisplay />
         </div>
     )
 }
