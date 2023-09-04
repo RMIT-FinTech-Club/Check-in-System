@@ -1,5 +1,6 @@
 'use client'
 import StepBar from "@/components/StepBar";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 function getIndex(pathname) {
@@ -22,7 +23,9 @@ export default function Template({children}) {
         <div className="content -mt-10">
             {/* Title description */}
             <div className=" flex flex-col text-center">
-                <h1 className="h1 text-blue-100 font-jomhuria"> Checker </h1>
+                <Link href={'/'}>
+                    <h1 className="h1 text-blue-100 font-jomhuria"> Checker </h1>
+                </Link>
                 <h3 className="h3 mt-2">
                 Your check-in setup is{" "}
                 <span className="text-blue-100 font-bold">{2 - index}</span> step away
