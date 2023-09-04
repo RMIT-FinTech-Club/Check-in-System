@@ -1,5 +1,5 @@
-import Question from "../utils/Question";
-import MultipleChoice from "../utils/MultipleChoice";
+import Question from "@/utils/Question";
+import MultipleChoice from "@/utils/MultipleChoice";
 
 import {
   Input,

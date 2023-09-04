@@ -1,6 +1,6 @@
 import React from "react";
 import { metadata } from "../layout";
-import "../css/utility.css"
+import "@/css/utility.css"
 
 export default function HomePage() {
     return (

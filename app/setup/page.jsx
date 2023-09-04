@@ -3,10 +3,10 @@
 import { InputNumber, Button, Card } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState, useRef, useEffect } from "react";
-import StepBar from "../components/StepBar";
+import StepBar from "@/components/StepBar";
 import { useRouter } from "next/navigation";
-import Question from "../utils/Question";
-import QuestionForm from "../components/QuestionForm";
+import Question from "@/utils/Question";
+import QuestionForm from "@/components/QuestionForm";
 
 /**
  * A react component represent the whole setup page
