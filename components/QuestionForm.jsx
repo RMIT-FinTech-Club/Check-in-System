@@ -5,14 +5,10 @@ import {
   Input,
   Switch,
   DatePicker,
-  Radio,
-  Space,
-  InputRef,
   Select,
-  Button,
-  Form,
+  Button
 } from "antd";
-import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 /**
  * A react component to display and edit details of a question
