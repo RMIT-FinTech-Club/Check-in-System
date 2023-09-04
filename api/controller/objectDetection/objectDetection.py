@@ -13,7 +13,7 @@ objectDetection_bp = Blueprint("object-detection", __name__)
 myconfig = r"--psm 6 --oem 3"
 
 # Load images as grayscale
-template = cv2.imread("../template.jpg", 0)
+template = cv2.imread("./api\controller\objectDetection/template.jpg", 0)
 
 # Get template's dimensions
 h, w = template.shape
@@ -164,30 +164,40 @@ def get_text():
 
     client = vision.ImageAnnotatorClient()
 
-    path = "assets\images\screenshot.jpg"
-    
+    path = "./api/assets/images/screenshot.jpg"  # Use forward slashes for path
+
     with open(path, "rb") as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
 
-    response = client.text_detection(image=image)
+    # Set the language hint to English
+    language_hints = ["en"]  # "en" represents English
+
+    response = client.text_detection(image=image, image_context={"language_hints": language_hints})
     texts = response.text_annotations
-    print("Texts:")
+
+    results = []  # To store the extracted data as dictionaries
 
     for text in texts:
-        print(f'\n"{text.description}"')
+        description = text.description.strip()  # Remove leading/trailing whitespaces
 
-        vertices = [
-            f"({vertex.x},{vertex.y})" for vertex in text.bounding_poly.vertices
-        ]
-
-        print("bounds: {}".format(",".join(vertices)))
+        # Use regular expressions to extract ID and name
+        import re
+        match = re.match(r'([A-Za-z\s]+)(\d+)', description)
+        if match:
+            name = match.group(1).strip()
+            id = int(match.group(2))
+            results.append({"id": id, "name": name})
 
     if response.error.message:
         raise Exception(
             "{}\nFor more info on error messages, check: "
             "https://cloud.google.com/apis/design/errors".format(response.error.message)
         )
+    
+    # Return the results as JSON
+    return jsonify(results)
+
 
 # get_text()
