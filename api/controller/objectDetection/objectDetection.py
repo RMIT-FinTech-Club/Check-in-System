@@ -1,5 +1,7 @@
 import cv2
-from flask import Blueprint, Response, send_file, jsonify
+from flask import Blueprint, Response, send_file, jsonify, request, redirect
+from socketManager import socketio
+from flask_socketio import emit
 import os
 import time
 # import requests
@@ -83,9 +85,16 @@ def generate_frames():
 
                     cv2.imwrite("./api/assets/images/screenshot.jpg", screenshot)
 
+                    # Emit message to client with message only
+                    # socketio.emit("screenshot_saved", {"message": "Screenshot taken."}, namespace='/objectDetection')
+                    
+                    # Redirect user to /get_text
+
+
                     # Reset timer
                     start_time = None
                     # break
+                    return (redirect("/test-api"))
         else:
             # Center of shape is not within center of frame + spacing, draw red rectangle, reset timer
             cv2.rectangle(img2, (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), (0, 0, 255), 2)
@@ -219,3 +228,8 @@ def get_text():
 
 #     # Pytesseract (Uncomment below for pytesseract return)
 #     # return jsonify({"text": text})
+
+
+@socketio.on('connect', namespace='/objectDetection')
+def handle_connect():
+    print('A client connected to the objectDetection namespace')
