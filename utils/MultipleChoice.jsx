@@ -1,6 +1,6 @@
 import Question from "./Question";
 import { Radio, Input, Button, Space } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { CloseOutlined} from "@ant-design/icons";
 import { useState } from "react";
 
 /**
@@ -47,31 +47,35 @@ export default function MultipleChoice({ question, edit }) {
         {/* Mapping each option into sub components that allow for editing and deleting that option */}
         {options.map((value, index) => {
           return (
-            <div className="flex items-center">
+            <div className="flex items-center mb-2">
               <Radio disabled></Radio>
               {edit ? (
-                <Input
-                  value={value}
-                  bordered={false}
-                  onChange={(e) => updateOption(index, e.target.value)}
-                ></Input>
+                <div className="mr-2">
+                  <Input
+                    value={value}
+                    bordered={false}
+                    style={{ width: 250 }}
+                    onChange={(e) => updateOption(index, e.target.value)}
+                  ></Input>
+                  <hr />
+                </div>
               ) : (
                 <p>{value}</p>
               )}
               {edit && (
-                <Button
+                <Button type='text' shape="circle"
                   onClick={() => {
                     removeOption(index);
                   }}
+                  icon={<CloseOutlined />}
                 >
-                  <DeleteOutlined />
                 </Button>
               )}
             </div>
           );
         })}
         {edit && (
-          <div className="flex">
+          <div className="flex mb-3">
             <Radio disabled></Radio>
             <Button onClick={addOption}>Add more option</Button>
           </div>

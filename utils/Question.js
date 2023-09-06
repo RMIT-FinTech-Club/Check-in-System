@@ -1,5 +1,5 @@
 /**
- * A class for storing information of a question object
+ * A className for storing information of a question object
  * @param {String} title - The title/header of the question
  * @param {String} type - The type of the question, includinng text, date, or multiple choice
  * @param {Boolean} required - Whether this question must be answer or not

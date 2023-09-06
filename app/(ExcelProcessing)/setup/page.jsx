@@ -1,9 +1,8 @@
 "use client";
 
-import { InputNumber, Button, Card } from "antd";
+import { InputNumber, Button, Tooltip } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useState, useRef, useEffect } from "react";
-import StepBar from "@/components/StepBar";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Question from "@/utils/Question";
 import QuestionForm from "@/components/QuestionForm";
@@ -18,7 +17,7 @@ export default function Setup() {
     new Question({ title: "Your style", id: "1" }),
   ]);
 
-  const [currentFocus, setCurrentFocus] = useState("-1");
+  const [currentFocus, setCurrentFocus] = useState(null);
   const router = useRouter();
 
   /**
@@ -64,35 +63,18 @@ export default function Setup() {
   }
 
   return (
-    <div className="content">
-      <button
-        onClick={() => {
-          console.log(questions);
-        }}
-      >
-        Log
-      </button>
-      <div className=" flex flex-col text-center">
-        <h1 className="h1 text-blue-100"> Checker </h1>
-        <h3 className="h3 mt-0">
-          Your check-in setup is{" "}
-          <span className="text-blue-100 bg-white">1</span> step away
-        </h3>
-      </div>
-
-      <Card className="shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-        <StepBar index={2}></StepBar>
-        <div className="flex justify-between align-middle items-center">
-          <h2 className="text-blue-100">Clud Day Participants</h2>
-          <div className="flex justify-center items-center">
-            <p className="font-bold mx-4">Select headers input</p>
-            <InputNumber min={1} max={100} defaultValue={3} />
+    <div>
+      <div className="flex justify-between align-middle items-center h3 mb-4">
+          <h2 className="text-blue-100">Club Day Participants</h2>
+          <div className="flex justify-center items-center gap-3">
+            <label>Select headers input</label>
+            <InputNumber min={1} max={100} defaultValue={1} />
           </div>
         </div>
+
         {/* Mapping each question into QuestionForm component */}
         {questions.map((value, index) => {
           return (
-            <>
               <QuestionForm
                 changeFocus={() => {
                   updateFocus(value.id);
@@ -104,15 +86,14 @@ export default function Setup() {
                   deleteQuestion(value.id);
                 }}
               ></QuestionForm>
-              <br></br>
-            </>
           );
         })}
-        <div className="flex justify-end mt-4">
-          <Button type="primary" onClick={addQuestion}>
-            <PlusOutlined />
-          </Button>
-          <Button className="mx-4 font-bold text-black-200">Previous</Button>
+        <div className="flex justify-end mt-4 gap-3">
+          <Tooltip title="Add question">
+            <Button type="primary" icon={<PlusOutlined />} onClick={addQuestion}>
+            </Button>
+          </Tooltip>
+          <Button>Previous</Button>
           <Button
             type="primary"
             className="font-bold"
@@ -123,7 +104,6 @@ export default function Setup() {
             Next
           </Button>
         </div>
-      </Card>
     </div>
   );
 }
