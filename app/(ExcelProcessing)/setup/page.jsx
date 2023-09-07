@@ -59,7 +59,7 @@ export default function Setup() {
    */
   function finishStep(router) {
     localStorage.setItem("questions", JSON.stringify(questions));
-    router.push("/checkin");
+    router.replace("/checkin");
   }
 
   return (
