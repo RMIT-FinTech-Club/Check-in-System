@@ -4,12 +4,14 @@ import { Button } from "antd";
 import { useState } from "react";
 
 
-export default function LoadingButton({size, api, children, style}) {
+export default function LoadingButton({size, api, children, style, onUpdateLoading}) {
     function enterLoading() {
         setLoading(true);
+        onUpdateLoading(true);
         setTimeout(() => {
             console.log('first')
             setLoading(false);
+            onUpdateLoading(false);
         }, 2000);
     }
 
