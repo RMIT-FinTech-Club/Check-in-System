@@ -3,6 +3,8 @@
 import { Button, Form, Input } from "antd"
 import axios from "axios";
 import { useState } from "react";
+import { LinkOutlined } from "@ant-design/icons";
+
 
 export default function LoadingForm() {
     const [validationStatus, setValidationStatus] = useState(null);
@@ -40,47 +42,34 @@ export default function LoadingForm() {
             setHelp("Please insert the Excel link");
         }
     }
-    // useEffect(() => {
-    //   if () {
-    //     setValidationStatus("error")
-    //     setHelp("The Excel link is invalid")
-    //   }
-    //   if (loading) {
-    //     setValidationStatus("validating")
-    //     setHelp("The Excel link is being validated...")
-    //   }
-    //   else {
-    //     setValidationStatus("")
-    //     setHelp("")
-    //   }
-    // },[loading])
   
     return (
-      <Form className='relative mt-14'>
+      <Form>
         <Form.Item
             validateStatus={validationStatus}
             help={help}
-            style={{width: '100%'}}
-            >
-            <Input onChange={(e) => setUrl(e.target.value)} style={{padding: '16px 140px 16px 16px', width: '100%'}} allowClear size="large" placeholder="Connect your Excel link here..." id="error"
-            prefix={
-            <svg className="w-5 h-5 text-black-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 19">
-            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.013 7.962a3.519 3.519 0 0 0-4.975 0l-3.554 3.554a3.518 3.518 0 0 0 4.975 4.975l.461-.46m-.461-4.515a3.518 3.518 0 0 0 4.975 0l3.553-3.554a3.518 3.518 0 0 0-4.974-4.975L10.3 3.7"/>
-            </svg>
-            } />
-
+            style={{width: '100%', padding: '0px'}}
+        >
+            <Input 
+            addonBefore={<LinkOutlined />} 
+            onChange={(e) => setUrl(e.target.value)} 
+            style={{
+                width: '100%',
+            }} 
+            allowClear 
+            size="large" 
+            placeholder="Insert your Excel link..." id="error" />
         </Form.Item>
+        <div style={{height: "10px"}}> </div>
         <Button
             type="primary"
             size="large"
             style={{
-            zIndex: 10,
+            width: '100%',
             display: 'flex',
+            justifyContent: 'center',
             alignItems: 'center',
-            position: 'absolute',
-            right: '10px', // Adjust this value as needed
-            top: '35%',
-            transform: 'translateY(-50%)',
+            textAlign: 'center',
             }}
             loading={loading}
             onClick={() => {
