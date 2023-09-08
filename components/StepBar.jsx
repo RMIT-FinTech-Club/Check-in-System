@@ -1,22 +1,24 @@
 'use client'
 import { Steps } from "antd";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-function navigateStep(current, index) {
-  if (current == 0) {
-    window.location.href = "/excel";
-  } else if (index > 1 && current == 1) {
-    window.location.href = "/setup";
-  } 
-}
 
 export default function StepBar({index}) {
+  function navigateStep(current) {
+    if (current == 0 && index > 0) {
+      router.replace("/excel");
+    } else if (index > 1 && current == 1) {
+      router.replace("/setup");
+    } 
+  }
+
+  const router = useRouter();
   const description = ["Link Excel", "Set-up check-in questions", "Check-in"];
   
   return (
     <Steps
       current={index}
-      onChange={(current, index) => navigateStep(current, index)}
+      onChange={(current) => navigateStep(current)}
       items={[
         {
           title: "Finished",

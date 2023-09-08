@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Form,
   Button,
@@ -76,7 +78,7 @@ export default function ManualForm({ questions }) {
         open={open}
         // onOk={handleOk}
         onCancel={handleCancel}
-        width={1000}
+        width={"70%"}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
       >
@@ -169,21 +171,14 @@ export default function ManualForm({ questions }) {
             );
           })}
 
-          <Form.Item
-            wrapperCol={{
-              offset: 1,
-            }}
-          >
-            <Space></Space>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
+      <Form.Item>
+        <Button type="primary">Submit</Button>
+      </Form.Item>
         </Form>
       </Modal>
       {/* Manual Input Button */}
-      <Button ghost className=" mt-4 w-full" type="primary" onClick={showModal}>
-        <span className="text-black-100"> Manual Input </span>
+      <Button size="large" className="w-full" onClick={showModal}>
+        Manual Input
       </Button>
     </>
   );

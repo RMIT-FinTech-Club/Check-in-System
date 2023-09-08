@@ -37,7 +37,6 @@ export default function CameraCheckin({ questions }) {
         }}
       >
         <Modal
-          // style={{ top: 0, left: 0 }}
           open={cameraOpen}
           onCancel={closeCamera}
           width={1000}
@@ -47,16 +46,16 @@ export default function CameraCheckin({ questions }) {
           <img
             src="https://repository-images.githubusercontent.com/387449953/0eb6de0d-1778-4e09-87e1-adf7ea9b0684"
             alt="Sample"
-            className=" mt-6"
+            className="mt-6"
           />
           <ManualForm questions={questions}></ManualForm>
         </Modal>
         <div className="flex justify-center">
           <Button
-            className=" h-40 w-40 border-none flex justify-center items-center "
             onClick={showCamera}
+            icon={<CameraOutlined style={{fontSize: '100px'}}/>}
+            style={{width: "150px", height: "130px"}}
           >
-            <CameraOutlined style={{ fontSize: "1000%" }} />
           </Button>
         </div>
       </ConfigProvider>
