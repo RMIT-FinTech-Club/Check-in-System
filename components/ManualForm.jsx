@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Form,
@@ -171,9 +171,11 @@ export default function ManualForm({ questions }) {
             );
           })}
 
-      <Form.Item>
-        <Button type="primary">Submit</Button>
-      </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
         </Form>
       </Modal>
       {/* Manual Input Button */}
