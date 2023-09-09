@@ -1,8 +1,4 @@
-'use client'
-
-import { Button, Input } from "antd";
 import ExcelChecking from "@/components/ExcelChecking";
-import { LinkOutlined } from "@ant-design/icons";
 
 export default function StepOnePage() {
     return (
