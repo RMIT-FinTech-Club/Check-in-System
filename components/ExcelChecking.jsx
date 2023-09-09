@@ -17,29 +17,24 @@ export default function LoadingForm() {
         setValidationStatus("validating");
         setHelp("Excel link is being validated...");
 
-        if (url != null) {
-            try {
-                console.log(url)
-                const response = await axios.post('/api/excel/access', {
-                    url: url,
-                    email: 'itslamemail@gmail.com',
-                    password: 'p20030917!1'
-                });
-                setLoading(false);
-                setHelp("The Excel link is valid");
-                // router.replace('/setup');
-                window.location.href = '/setup';
-                
-            } catch (error) {
-                setLoading(false);
-                setValidationStatus("error");
-                setHelp("The Excel link is invalid");
+        try {
+            if (!url) {
+                throw new Error("Please enter a valid Excel link");
             }
-        }
-        else {
+            const response = await axios.post('/api/excel/access', {
+                url: url,
+                email: 'itslamemail@gmail.com',
+                password: 'p20030917!1'
+            });
+            setLoading(false);
+            setHelp("The Excel link is valid");
+            // router.replace('/setup');
+            window.location.href = '/setup';
+            
+        } catch (error) {
             setLoading(false);
             setValidationStatus("error");
-            setHelp("Please insert the Excel link");
+            setHelp("The Excel link is invalid");
         }
     }
   
