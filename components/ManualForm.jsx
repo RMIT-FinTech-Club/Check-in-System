@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Form,
@@ -9,6 +9,7 @@ import {
   message,
   Space,
   Modal,
+  Select,
 } from "antd";
 import Question from "@/utils/Question";
 import { validatesID, validatesName } from "@/utils/formValidator";
@@ -109,7 +110,15 @@ export default function ManualForm({ questions }) {
           {/* Mapping each question into an input field using the question attributes */}
           {questions.map((question) => {
             let title = question.title.slice();
-            let choices = question.choice;
+            let choices = Array.from(new Set(question.choice)); // Remove identical options from multiple choice
+            // converting array of choices into options for select input
+            let selectChoice = choices.map((choice) => {
+              return { value: choice, label: choice };
+            });
+            // selectChoice.push({
+            //   value: "",
+            //   label: "No options/Empty value",
+            // });
             return (
               <Form.Item
                 key={question.id}
@@ -143,11 +152,17 @@ export default function ManualForm({ questions }) {
               >
                 {/* Rendering the multiple choice input directly due to the need of choice attribute from question */}
                 {question.type == "Multiple choice" ? (
-                  <Radio.Group>
-                    {choices.map((choice) => {
-                      return <Radio value={choice}>{choice}</Radio>;
-                    })}
-                  </Radio.Group>
+                  // <Radio.Group>
+                  //   {choices.map((choice) => {
+                  //     return <Radio value={choice}>{choice}</Radio>;
+                  //   })}
+                  // </Radio.Group>
+                  <Select
+                    placeholder="Enter your option"
+                    style={{ width: 500 }}
+                    options={selectChoice}
+                    allowClear={true}
+                  />
                 ) : (
                   // If not multiple choice question, then using the typeMapping to map to the corresponding question type
                   typeMapping[question.type]
@@ -156,9 +171,11 @@ export default function ManualForm({ questions }) {
             );
           })}
 
-      <Form.Item>
-        <Button type="primary">Submit</Button>
-      </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
         </Form>
       </Modal>
       {/* Manual Input Button */}
