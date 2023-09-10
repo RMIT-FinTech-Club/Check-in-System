@@ -21,15 +21,15 @@ export default function StepBar({index}) {
       onChange={(current) => navigateStep(current)}
       items={[
         {
-          title: "Finished",
+          title: "Step 1",
           description: description[0],
         },
         {
-          title: "In Progress",
+          title: "Step 2",
           description: description[1],
         },
         {
-          title: "Waiting",
+          title: "Step 3",
           description: description[2],
         },
       ]}
