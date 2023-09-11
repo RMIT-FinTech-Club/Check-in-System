@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
@@ -19,15 +19,18 @@ pyxcel_bp = Blueprint("pyxcel", __name__)
 pyxcel_thread = threading.local()
 
 # load_dotenv("../../.env.local")
-iframe_switchable = True
+# iframe_switchable = True
 
 
 def switch_to_iframe(driver):
-    global iframe_switchable
-    if iframe_switchable:
-        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
+    # global iframe_switchable
+    try:
+        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
+        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
         driver.switch_to.frame(iframe_element)
-        iframe_switchable = False
+        # iframe_switchable = False
+    except NoSuchElementException:
+        pass
 
 
 def create_driver_options() -> Options:
@@ -119,6 +122,8 @@ def test_selenium():
     # Switch to iframe if possible
     switch_to_iframe(driver)
 
+    # ExcelActions.shift_row(driver, direction=Direction.DOWN, until=ActionTypes.NTH_CELL, nth_row=23 - 1)
+
     try:
         ExcelActions.shift_column(driver, direction=Direction.RIGHT, by_column=10)
         ExcelActions.shift_row(driver, direction=Direction.DOWN, until=ActionTypes.NTH_CELL, nth_row=23 - 1)
@@ -149,6 +154,7 @@ def go_to_cell():
         ExcelActions.go_to_cell(driver, cell_position)
         # ExcelActions.tp_to_cell(driver, cell_position)
     except Exception:
+        # print(e, sys.stderr)
         return jsonify({'message': 'request failed'}), 500
 
     return jsonify({'page_url': 'Nothing to see here, just saying that this has executed successfully'}), 200
@@ -180,3 +186,55 @@ def add_data():
         return jsonify({'message': 'request failed'}), 500
 
     return jsonify({'page_url': 'Nothing to see here, just saying that this has executed successfully'}), 200
+
+
+@pyxcel_bp.route('/get-file-name', methods=['POST'])
+def get_file_name():
+    driver = WDS.get_driver()
+    if not driver:
+        return jsonify({'message': 'driver request failed'}), 500
+
+    # Switch to iframe if possible
+    switch_to_iframe(driver)
+
+    try:
+        file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span.documentTitle-254'))).get_attribute('textContent')
+
+    except TimeoutException:
+        return jsonify({'message': 'Couldnt locate the element'}), 500
+
+    return jsonify({'message': 'File name returned successfully',
+                    'fileName': file_name}), 200
+
+
+@pyxcel_bp.route('/query-headers', methods=['POST'])
+def query_header():
+    driver = WDS.get_driver()
+    if not driver:
+        return jsonify({'message': 'driver request failed'}), 500
+
+    json_data = request.json
+
+    header_position = json_data.get('header_position')
+
+    # Switch to iframe if possible
+    switch_to_iframe(driver)
+
+    try:
+        # file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span.documentTitle-254'))).get_attribute('textContent')
+        headers = []
+        ExcelActions.ctrl_home(driver)
+        ExcelActions.go_to_cell(driver, header_position)
+
+        while True:
+            cell_data = ExcelActions.get_cell_data(driver)
+            if cell_data == '':
+                break
+            headers.append(cell_data)
+            ExcelActions.shift_column(driver, direction=Direction.RIGHT, by_column=1)
+
+    except TimeoutException:
+        return jsonify({'message': 'Couldnt locate the element'}), 500
+
+    return jsonify({'message': 'Header queried successfully',
+                    'headers': headers}), 200

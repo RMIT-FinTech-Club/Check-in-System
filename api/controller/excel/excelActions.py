@@ -254,6 +254,12 @@ class ExcelActions:
             vertical_key_perform()
 
     @staticmethod
+    def get_cell_data(driver: WebDriver) -> str:
+        cell_text = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#formulaBarTextDivId_textElement > div'))).get_attribute('textContent')
+
+        return cell_text
+
+    @staticmethod
     def tp_to_cell(driver: WebDriver, cell: str):
         """teleport to specific cell, perform faster than go_to_cell. Error prone, use with caution
 

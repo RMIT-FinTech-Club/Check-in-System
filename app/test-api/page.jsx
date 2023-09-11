@@ -11,6 +11,8 @@ export default function Page() {
     const [cell, setCell] = useState();
 
     const [data, setData] = useState();
+    
+    const [headerPosition, setHeaderPosition] = useState();
 
     async function accessExcel() {
         try {
@@ -63,16 +65,37 @@ export default function Page() {
         } catch (error) {
           console.error('Error fetching data:', error)
         }
-    } 
+    }
+
+    async function getFileName() {
+      try {
+          const response = await axios.post('/api/excel/get-file-name', {});
+          setResponseData(response.data)
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        }
+    }
+
+    async function queryHeaders() {
+      try {
+          const response = await axios.post('/api/excel/query-headers', {
+            header_position : headerPosition
+          });
+          setResponseData(response.data)
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        }
+    }
 
     return (
         <div className="content">
             <h1>This will test the api</h1>
             {responseData && <p>{JSON.stringify(responseData, null, 2)}</p>}
             <div className="mt-4 [&>*]:m-2">
-                <Button onClick={accessExcel}>access Excel</Button>
-                <Button onClick={testExcel}>test Excel</Button>
-                <Button onClick={dcExcel}>disconnect Excel</Button>
+                <Button onClick={accessExcel}>Access Excel</Button>
+                <Button onClick={testExcel}>Test Excel</Button>
+                <Button onClick={dcExcel}>Disconnect Excel</Button>
+                <Button onClick={getFileName}>Get Excel file name</Button>
 
                 <div className="flex flex-col gap-3">
                   <div className="flex gap-3 items-center">
@@ -81,11 +104,19 @@ export default function Page() {
                      type="text" placeholder="input cell"
                      onChange={e => setCell(e.target.value)} />
                   </div>
+
                   <div className="flex gap-3 items-center">
                     <Button onClick={addData}>Add data</Button>
                     <input className="p-1 border border-gray-300 rounded-md"
                      type="text" placeholder="input data"
                      onChange={e => setData(e.target.value)} />
+                  </div>
+
+                  <div className="flex gap-3 items-center">
+                    <Button onClick={queryHeaders}>Query headers</Button>
+                    <input className="p-1 border border-gray-300 rounded-md"
+                     type="text" placeholder="input data"
+                     onChange={e => setHeaderPosition(e.target.value)} />
                   </div>
                 </div>
             </div>
