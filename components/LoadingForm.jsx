@@ -16,7 +16,7 @@ export default function LoadingForm() {
         setHelp("Excel link is being validated...");
 
         try {
-            if (!url) {
+            if (!url.trim()) {
                 throw new Error("Please enter a valid Excel link");
             }
             const response = await axios.post('/api/excel/access', {
@@ -35,20 +35,6 @@ export default function LoadingForm() {
             setHelp("The Excel link is invalid");
         }
     }
-    // useEffect(() => {
-    //   if () {
-    //     setValidationStatus("error")
-    //     setHelp("The Excel link is invalid")
-    //   }
-    //   if (loading) {
-    //     setValidationStatus("validating")
-    //     setHelp("The Excel link is being validated...")
-    //   }
-    //   else {
-    //     setValidationStatus("")
-    //     setHelp("")
-    //   }
-    // },[loading])
   
     return (
       <Form className='relative mt-14'>
