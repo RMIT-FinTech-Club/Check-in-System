@@ -2,6 +2,7 @@ import { Button, Modal, ConfigProvider, Space } from "antd";
 import { CameraOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import ManualForm from "@/components/ManualForm";
+import { WebcamFeed } from "./ObjectDetection";
 
 export default function CameraCheckin({ questions }) {
   // Handling camera opening and closing
@@ -31,7 +32,10 @@ export default function CameraCheckin({ questions }) {
         theme={{
           components: {
             Modal: {
-              // contentBg: "transparent",
+              contentBg: "transparent",
+              boxShadow: "none",
+              padding: "0px",
+              colorIcon: "#00000",
             },
           },
         }}
@@ -39,15 +43,10 @@ export default function CameraCheckin({ questions }) {
         <Modal
           open={cameraOpen}
           onCancel={closeCamera}
-          width={1000}
           okButtonProps={{ style: { display: "none" } }}
           cancelButtonProps={{ style: { display: "none" } }}
         >
-          <img
-            src="https://repository-images.githubusercontent.com/387449953/0eb6de0d-1778-4e09-87e1-adf7ea9b0684"
-            alt="Sample"
-            className="mt-6"
-          />
+          <WebcamFeed />
           <ManualForm questions={questions}></ManualForm>
         </Modal>
         <div className="flex justify-center">
