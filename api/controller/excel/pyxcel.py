@@ -25,8 +25,8 @@ pyxcel_thread = threading.local()
 def switch_to_iframe(driver):
     # global iframe_switchable
     try:
-        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
-        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
+        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
+        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
         driver.switch_to.frame(iframe_element)
         # iframe_switchable = False
     except NoSuchElementException:
@@ -198,7 +198,7 @@ def get_file_name():
     switch_to_iframe(driver)
 
     try:
-        file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span.documentTitle-254'))).get_attribute('textContent')
+        file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span'))).get_attribute('textContent')
 
     except TimeoutException:
         return jsonify({'message': 'Couldnt locate the element'}), 500
