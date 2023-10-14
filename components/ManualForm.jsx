@@ -10,6 +10,7 @@ import {
   Space,
   Modal,
   Select,
+  ConfigProvider,
 } from "antd";
 import Question from "@/utils/Question";
 import { validatesID, validatesName } from "@/utils/formValidator";
@@ -72,7 +73,18 @@ export default function ManualForm({ questions }) {
   };
 
   return (
-    <>
+    <ConfigProvider
+      theme={{
+        components: {
+          Button: {
+            borderRadiusLG: "0px",
+          },
+          Modal: {
+            contentBg: "#ffffff",
+          },
+        },
+    }}
+    >
       {/* Modal for manual input form */}
       <Modal
         open={open}
@@ -179,9 +191,14 @@ export default function ManualForm({ questions }) {
         </Form>
       </Modal>
       {/* Manual Input Button */}
-      <Button size="large" className="w-full" onClick={showModal}>
-        Manual Input
-      </Button>
-    </>
+        <Button
+          size="large"
+          className="w-full"
+          type='default'
+          onClick={showModal}
+        >
+          Manual Input
+        </Button>
+    </ConfigProvider>
   );
 }
