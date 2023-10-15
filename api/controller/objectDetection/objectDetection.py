@@ -8,7 +8,8 @@ import time
 import json
 # import pytesseract
 # import PIL.Image
-
+## Import socket io publish message function
+from controller.socket.publishMessage import publishMess
 
 # Use the client to make requests to the Vision API
 
@@ -94,7 +95,9 @@ def generate_frames():
                     # Reset timer
                     start_time = None
                     # break
-                    return (redirect("/test-api"))
+                    # return (redirect("/test-api"))
+                    ## Test socket io publish message
+                    publishMess()
         else:
             # Center of shape is not within center of frame + spacing, draw red rectangle, reset timer
             cv2.rectangle(img2, (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), (0, 0, 255), 2)
