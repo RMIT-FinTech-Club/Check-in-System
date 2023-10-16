@@ -5,7 +5,7 @@ from controller.excel.pyxcel import pyxcel_bp
 from controller.test import hello_world
 from controller.objectDetection.objectDetection import objectDetection_bp
 # Import socket intialize object
-# from controller.socket.socketio import socketio
+from controller.socket.socketio import socketio
 
 app = Flask(__name__)
 # CORS(app)
@@ -14,7 +14,7 @@ app.register_blueprint(pyxcel_bp, url_prefix='/api/excel')
 app.register_blueprint(objectDetection_bp, url_prefix='/api/objectDetection')
 
 # Initialize socket io
-# socketio.init_app(app)
+socketio.init_app(app)
 
 # Routes
 @app.route("/api/python")
