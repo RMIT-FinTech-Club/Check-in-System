@@ -19,7 +19,20 @@ import { useState } from "react";
 /**
  * A component for user to manually fill out form for the checkin process
  */
-export default function ManualForm({ questions }) {
+function TypeMapping({question, value}) {
+  switch (question) {
+    case "Text":
+      return <Input placeholder="Enter your text"></Input>;
+    case "sID":
+      return <Input placeholder="Enter your sID" value={value.sid}></Input>;
+    case "Name":
+      return <Input placeholder="Enter your name" value={value.name}></Input>;
+    case "Date":
+      return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
+  }
+}
+
+export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}) {
   const [form] = Form.useForm(); // Storing the reference to the form
   const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
 
@@ -54,7 +67,7 @@ export default function ManualForm({ questions }) {
   };
 
   // Handling modal opening and closing
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(isOpen);
 
   const showModal = () => {
     setOpen(true);
@@ -89,7 +102,7 @@ export default function ManualForm({ questions }) {
       <Modal
         open={open}
         // onOk={handleOk}
-        onCancel={handleCancel}
+        onCancel={() => {handleCancel(); cancelFunc()}}
         width={"70%"}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
@@ -177,7 +190,7 @@ export default function ManualForm({ questions }) {
                   />
                 ) : (
                   // If not multiple choice question, then using the typeMapping to map to the corresponding question type
-                  typeMapping[question.type]
+                  <TypeMapping question={question.type} value={scannedData} />
                 )}
               </Form.Item>
             );
