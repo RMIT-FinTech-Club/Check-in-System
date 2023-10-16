@@ -10,7 +10,7 @@ function getIndex(pathname) {
     if (pathname == "/setup") {
       return 1;
     }
-    if (pathname == "/check-in") {
+    if (pathname == "/checkin") {
       return 2;
     }
 }
@@ -28,7 +28,7 @@ export default function Template({children}) {
                 </Link>
                 <h3 className="h3 mt-2">
                 Your check-in setup is{" "}
-                <span className="text-blue-100 font-bold">{2 - index}</span> step away
+                <span className="text-blue-100 font-bold"> {(index !== 2) ?? 2 - index} </span> {index !== 2 ? "step(s) away" : "ready"}
                 </h3>
             </div>
 

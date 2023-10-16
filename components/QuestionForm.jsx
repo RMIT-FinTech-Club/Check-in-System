@@ -1,18 +1,8 @@
 import Question from "@/utils/Question";
 import MultipleChoice from "@/utils/MultipleChoice";
 
-import {
-  Input,
-  Switch,
-  DatePicker,
-  Radio,
-  Space,
-  InputRef,
-  Select,
-  Button,
-  Form,
-} from "antd";
-import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import { Input, Switch, DatePicker, Select, Button } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 /**
  * A react component to display and edit details of a question
@@ -48,8 +38,11 @@ export default function QuestionForm({
     ),
     Date: <DatePicker bordered={false} />,
     "Multiple choice": (
-      <div className='ml-2'>
-        <MultipleChoice question={question} edit={currentFocus == question.id} />
+      <div className="ml-2">
+        <MultipleChoice
+          question={question}
+          edit={currentFocus == question.id}
+        />
       </div>
     ),
   };
@@ -61,8 +54,7 @@ export default function QuestionForm({
    */
   function handleFocus() {
     if (edit == true) return;
-    // inputRef.current.focus({ cursor: "end" });
-    // console.log(inputRef.current);
+    inputRef.current.focus({ cursor: "end" });
     changeFocus();
   }
 
@@ -87,8 +79,8 @@ export default function QuestionForm({
           {/* {edit ? ( */}
           <Input
             id={"input" + question.id}
-            // bordered={false}
-            className={`${!edit && "hidden"}`}
+            bordered={edit}
+            className={`mb-4 mt-0 font-bold w-full ${!edit && "h3"}`}
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
@@ -97,12 +89,13 @@ export default function QuestionForm({
             label={"Question"}
             ref={inputRef}
           ></Input>
+          {/* ) : ( */}
+          {/* <h3 className={` ${edit && "hidden"}`}>{title}</h3> */}
+          {/* )} */}
           <br />
 
           {/* Mapping the type of question to the suitable answering box */}
-          <div className="mt-3 -ml-2">
-            {typeMapping[type]}
-          </div>
+          <div className="mt-3 -ml-2">{typeMapping[type]}</div>
         </div>
         {/* Selection box for choosing question type */}
         <div className="grow-0">
@@ -124,8 +117,12 @@ export default function QuestionForm({
         <>
           <hr className="mt-1 mb-3" />
           <div className="flex justify-end items-center gap-3 text-black-200">
-            <Button type='text' shape="circle" onClick={deleteQuestion} icon={<DeleteOutlined />}>
-            </Button>
+            <Button
+              type="text"
+              shape="circle"
+              onClick={deleteQuestion}
+              icon={<DeleteOutlined />}
+            ></Button>
             <div>
               <label className="mr-2">Required</label>
               <Switch
