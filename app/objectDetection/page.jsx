@@ -1,45 +1,55 @@
-"use client"
+"use client";
 import { WebcamFeed } from "../../components/ObjectDetection";
-import { TextDisplay } from "../../components/GetText";
-import { useState, useEffect } from 'react';
-// import io from 'socket.io-client';
-
-// const socket = io.connect('http://localhost:3000/objectDetection');
-
-// const YourComponent = () => {
-//     // State to store the signal data
-//     const [signal, setSignal] = useState('');
-  
-//     // Listen for the 'screenshot_saved' event
-//     useEffect(() => {
-//       socket.on('screenshot_saved', (data) => {
-//         // Handle the signal data here
-//         console.log('Signal received:', data);
-//         setSignal(data.message); // Update the state with the signal message
-//       });
-  
-//       return () => {
-//         // Clean up the event listener when the component unmounts
-//         socket.off('screenshot_saved');
-//       };
-//     }, []);
-  
-//     return (
-//       <div>
-//         <h1>Check for signal</h1>
-//         <p>Signal: {signal}</p>
-//         {/* Your other React components */}
-//       </div>
-//     );
-//   };
+import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
+import { Observable } from "rxjs";
 
 export default function Page() {
+  // initialize socket
+  // const socket = io("http://localhost:5328");
+  const [screenshotStatus, setScreenshotStatus] = useState("Initializing...");
 
-    return (
-        <div className="content">
-            <h1>Camera Feed</h1>
-            <WebcamFeed />
-            {/* <YourComponent /> */}
-        </div>
-    )
+  // RxJS test
+  const data$ = new Observable((observer) => {
+    fetch("/api/objectDetection/queue")
+      .then((response) => {
+        return response;
+      }) // or text() or blob() etc.
+      .then((data) => {
+        observer.next(data);
+        observer.complete();
+      })
+      .catch((err) => observer.error(err));
+  });
+  data$.subscribe({
+    next(x) {
+      console.log(x);
+    },
+  });
+  // SSE test
+  // useEffect(() => {
+  //   const sse = new EventSource("/api/objectDetection/queue");
+  //   sse.addEventListener("message", (res) => {
+  //     console.log(res.data);
+  //     setScreenshotStatus("Receive an event");
+  //   });
+
+  //   return () => {
+  //     console.log("Close event source");
+  //     sse.close();
+  //   };
+  // }, []);
+
+  // socket io test
+  // socket.on("message", (res) => {
+  //   console.log(res);
+  //   setScreenshotStatus("Receive an event");
+  // });
+  return (
+    <div className="content">
+      <h1>Camera Feed</h1>
+      <WebcamFeed />
+      <p>ScreenshotStatus: {screenshotStatus}</p>
+    </div>
+  );
 }

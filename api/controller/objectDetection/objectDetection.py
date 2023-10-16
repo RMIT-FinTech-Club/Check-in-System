@@ -8,7 +8,9 @@ import time
 import json
 # import pytesseract
 # import PIL.Image
-
+## Import socket io publish message function
+# from controller.socket.publishMessage import publishMess
+from queue import Queue
 
 # Use the client to make requests to the Vision API
 
@@ -28,6 +30,8 @@ h, w = template.shape
 methods = [cv2.TM_CCOEFF, cv2.TM_CCOEFF_NORMED, cv2.TM_CCORR,
            cv2.TM_CCOEFF_NORMED, cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]
         
+# Create a message queue
+messages = Queue(maxsize=1)
 
 def generate_frames():
     camera = cv2.VideoCapture(0)  # Access the camera (0 for default camera)
@@ -94,7 +98,12 @@ def generate_frames():
                     # Reset timer
                     start_time = None
                     # break
-                    return (redirect("/test-api"))
+                    # return (redirect("/test-api"))
+                    ## Test socket io publish message
+                    # publishMess()
+                    ## Test sse (if the messages queue is empty, then put a new message to the queue)
+                    if (messages.empty()): messages.put("1")
+                    
         else:
             # Center of shape is not within center of frame + spacing, draw red rectangle, reset timer
             cv2.rectangle(img2, (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), (0, 0, 255), 2)
@@ -233,3 +242,14 @@ def get_text():
 @socketio.on('connect', namespace='/objectDetection')
 def handle_connect():
     print('A client connected to the objectDetection namespace')
+
+
+@objectDetection_bp.route('/queue')
+def queue():
+    def getQueue():
+        # If message queue is not empty, than send an signal to the front end that screenshot has taken
+        if (messages.empty() is False):
+            mid = messages.get()
+            return f"data: 'taken'\n\n"
+        return f"data: 'waiting'"
+    return Response(getQueue(), mimetype='text/event-stream')
