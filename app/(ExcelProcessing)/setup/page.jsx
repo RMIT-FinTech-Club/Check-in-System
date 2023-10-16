@@ -2,23 +2,35 @@
 
 import { InputNumber, Button, Tooltip } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Question from "@/utils/Question";
 import QuestionForm from "@/components/QuestionForm";
+import axios from "axios"
+import { get } from "http";
+
 
 /**
  * A react component represent the whole setup page
  */
 export default function Setup() {
+  const [headers, setHeaders] = useState();
+
+  const [fileName, setFileName] = useState();
+
+  const [cell, setCell] = useState();
+
+  const [data, setData] = useState();
+  
+  const [headerPosition, setHeaderPosition] = useState("A1");
+
   // Storing information of all the questions during setup
-  const [questions, setQuestions] = useState([
-    new Question({ title: "Your name", id: "0" }),
-    new Question({ title: "Your style", id: "1" }),
-  ]);
+  const [questions, setQuestions] = useState([]);
 
   const [currentFocus, setCurrentFocus] = useState(null);
   const router = useRouter();
+
+  getFileName()
 
   /**
    * A function to delete a question base on its id
@@ -62,16 +74,43 @@ export default function Setup() {
     router.replace("/checkin");
   }
 
+  async function queryHeaders() {
+    try {
+        const response = await axios.post('/api/excel/query-headers', {
+          header_position : headerPosition
+        });
+        setHeaders(response.data.headers)
+        const Questions = []
+        response.data.headers.forEach((header, index) => {
+          Questions.push(new Question({ title: header, id: index.toString() }))
+        })
+        setQuestions(Questions)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+  }
+
+  async function getFileName() {
+    try {
+        const response = await axios.post('/api/excel/get-file-name', {});
+        setFileName(response.data.fileName)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+  }
+
   return (
     <div>
       <div className="flex justify-between align-middle items-center h3 mb-4">
-          <h2 className="text-blue-100">Club Day Participants</h2>
+          <h2 className="text-blue-100">{fileName}</h2> 
           <div className="flex justify-center items-center gap-3">
             <label>Select headers input</label>
-            <InputNumber min={1} max={100} defaultValue={1} />
+            <input className="p-1 text-sm font-normal border border-gray-300 rounded-md"
+              type="text" placeholder="Header position"
+              onChange={e => setHeaderPosition(e.target.value)} />
+            <Button onClick={queryHeaders}>Confirm</Button>
           </div>
         </div>
-
         {/* Mapping each question into QuestionForm component */}
         {questions.map((value, index) => {
           return (
