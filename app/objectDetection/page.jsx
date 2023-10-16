@@ -5,14 +5,28 @@ import { io } from "socket.io-client";
 
 export default function Page() {
   // initialize socket
-  const socket = io("http://localhost:5328");
+  // const socket = io("http://localhost:5328");
   const [screenshotStatus, setScreenshotStatus] = useState("Initializing...");
 
-  // socket io
-  socket.on("message", (res) => {
-    console.log(res);
-    setScreenshotStatus("Receive an event");
-  });
+  // SSE test
+  useEffect(() => {
+    const sse = new EventSource("/api/objectDetection/queue");
+    sse.addEventListener("message", (res) => {
+      console.log(res.data);
+      setScreenshotStatus("Receive an event");
+    });
+
+    return () => {
+      console.log("Close event source");
+      sse.close();
+    };
+  }, []);
+
+  // socket io test
+  // socket.on("message", (res) => {
+  //   console.log(res);
+  //   setScreenshotStatus("Receive an event");
+  // });
   return (
     <div className="content">
       <h1>Camera Feed</h1>
