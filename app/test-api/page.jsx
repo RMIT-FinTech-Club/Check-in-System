@@ -14,6 +14,10 @@ export default function Page() {
     
     const [headerPosition, setHeaderPosition] = useState();
 
+    const [name, setName] = useState('');
+
+    const [id, setId] = useState('');
+
     async function accessExcel() {
         try {
             const response = await axios.post('/api/excel/access', {
@@ -87,6 +91,22 @@ export default function Page() {
         }
     }
 
+    async function submitDataToRow() {
+      try {
+          const response = await axios.post('/api/excel/add-data-to-new-row', {
+              data: [name, id]
+          });
+          setResponseData(response.data);
+  
+          // Clear the input fields after successful submission
+          setName('');  
+          setId('');
+      } catch (error) {
+          console.error('Error submitting data:', error);
+      }
+    }
+  
+
     return (
         <div className="content">
             <h1>This will test the api</h1>
@@ -118,6 +138,21 @@ export default function Page() {
                      type="text" placeholder="input data"
                      onChange={e => setHeaderPosition(e.target.value)} />
                   </div>
+
+                  <div className="flex gap-3 items-center">
+
+                    <input className="p-1 border border-gray-300 rounded-md" type="text" 
+                          placeholder="Name" value={name} 
+                          onChange={e => setName(e.target.value)} />
+                          
+                    <input className="p-1 border border-gray-300 rounded-md" type="text" 
+                          placeholder="ID" value={id} 
+                          onChange={e => setId(e.target.value)} />
+
+                    <Button onClick={submitDataToRow}>Submit</Button>
+
+                  </div>
+
                 </div>
             </div>
         </div>

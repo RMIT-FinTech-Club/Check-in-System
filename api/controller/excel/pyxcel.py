@@ -238,3 +238,41 @@ def query_header():
 
     return jsonify({'message': 'Header queried successfully',
                     'headers': headers}), 200
+
+@pyxcel_bp.route('/add-data-to-new-row', methods=['POST'])
+def add_data_to_new_row():
+    driver = WDS.get_driver()
+    if not driver:
+        return jsonify({'message': 'driver request failed'}), 500
+
+    json_data = request.json
+    data = json_data.get('data')
+    if not data:
+        return jsonify({'message': 'data not provided'}), 500
+
+    switch_to_iframe(driver) 
+
+    try:
+        # Navigate downwards until an empty first column cell is found
+        # Start from A1 as it's the first cell of the first column
+        ExcelActions.go_to_cell(driver, 'A1')
+        ExcelActions.shift_row(driver, Direction.DOWN, until=ActionTypes.EMPTY_CELL)
+
+        # At this point, we should be in the first column of an empty row, ready to input data
+        for item in data:
+            current_content = ExcelActions.get_cell_data(driver)  # Retrieve cell content
+            if not current_content:  # If the cell is empty
+                ActionChains(driver).send_keys(item).perform()
+                ExcelActions.shift_column(driver, Direction.RIGHT)  # Move to the next column
+
+        # Once data is entered, navigate to the next row in the first column
+        current_cell = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#FormulaBar-NameBox-input'))).get_attribute('value')
+        current_row = ExcelActions.__extract_num(current_cell)
+        next_row_first_column = f"A{current_row + 1}"
+        ExcelActions.go_to_cell(driver, next_row_first_column)
+
+    except Exception as e:
+        # Return a more detailed error message for debugging
+        return jsonify({'message': f"Error: {str(e)}"}), 500
+
+    return jsonify({'message': 'Record added successfully'}), 200
