@@ -8,19 +8,16 @@ import Question from "@/utils/Question";
 import QuestionForm from "@/components/QuestionForm";
 import axios from "axios"
 import { get } from "http";
+import ColumnGroup from "antd/es/table/ColumnGroup";
 
 
 /**
  * A react component represent the whole setup page
  */
 export default function Setup() {
-  const [headers, setHeaders] = useState();
+  const [headers, setHeaders] = useState(null);
 
-  const [fileName, setFileName] = useState();
-
-  const [cell, setCell] = useState();
-
-  const [data, setData] = useState();
+  const [fileName, setFileName] = useState(null);
   
   const [headerPosition, setHeaderPosition] = useState("A1");
 
@@ -79,12 +76,12 @@ export default function Setup() {
         const response = await axios.post('/api/excel/query-headers', {
           header_position : headerPosition
         });
-        setHeaders(response.data.headers)
-        const Questions = []
+        const queryQuestions = []
         response.data.headers.forEach((header, index) => {
-          Questions.push(new Question({ title: header, id: index.toString() }))
+          queryQuestions.push(new Question({ title: header, id: index.toString() }))
         })
-        setQuestions(Questions)
+        console.log(queryQuestions);
+        setQuestions(queryQuestions)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
