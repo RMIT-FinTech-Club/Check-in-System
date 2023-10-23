@@ -217,7 +217,7 @@ class ExcelActions:
         row_target_location = ExcelActions.__extract_num(cell)
 
         # Get current column location
-        cell_location = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#FormulaBar-NameBox-input'))).get_attribute('value')
+        cell_location = "A1"
         curent_column = ExcelActions.__char_to_num(ExcelActions.__extract_char(cell_location))
         curretn_row = ExcelActions.__extract_num(cell_location)
 
