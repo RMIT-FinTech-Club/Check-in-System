@@ -6,10 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Question from "@/utils/Question";
 import QuestionForm from "@/components/QuestionForm";
-import axios from "axios"
-import { get } from "http";
-import ColumnGroup from "antd/es/table/ColumnGroup";
-
+import axios from "axios";
 
 /**
  * A react component represent the whole setup page
@@ -76,12 +73,12 @@ export default function Setup() {
         const response = await axios.post('/api/excel/query-headers', {
           header_position : headerPosition
         });
-        const queryQuestions = []
-        response.data.headers.forEach((header, index) => {
-          queryQuestions.push(new Question({ title: header, id: index.toString() }))
-        })
-        console.log(queryQuestions);
-        setQuestions(queryQuestions)
+        const headers = response.data.headers;
+        const queryQuestions = headers.map((header, index) => {
+          return new Question({ title: header, id: index.toString() })
+        });
+
+        setQuestions(queryQuestions);
       } catch (error) {
         console.error('Error fetching data:', error)
       }
@@ -108,6 +105,7 @@ export default function Setup() {
             <Button onClick={queryHeaders}>Confirm</Button>
           </div>
         </div>
+
         {/* Mapping each question into QuestionForm component */}
         {questions.map((value, index) => {
           return (
@@ -116,7 +114,7 @@ export default function Setup() {
                   updateFocus(value.id);
                 }}
                 currentFocus={currentFocus}
-                key={value.id}
+                key={value.title}
                 question={value}
                 deleteQuestion={() => {
                   deleteQuestion(value.id);
