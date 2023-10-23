@@ -25,8 +25,8 @@ pyxcel_thread = threading.local()
 def switch_to_iframe(driver):
     # global iframe_switchable
     try:
-        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
-        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
+        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
+        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
         driver.switch_to.frame(iframe_element)
         # iframe_switchable = False
     except NoSuchElementException:
@@ -198,7 +198,7 @@ def get_file_name():
     switch_to_iframe(driver)
 
     try:
-        file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span.documentTitle-254'))).get_attribute('textContent')
+        file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span.documentTitle'))).get_attribute('textContent')
 
     except TimeoutException:
         return jsonify({'message': 'Couldnt locate the element'}), 500
@@ -239,6 +239,7 @@ def query_header():
     return jsonify({'message': 'Header queried successfully',
                     'headers': headers}), 200
 
+
 @pyxcel_bp.route('/add-data-to-new-row', methods=['POST'])
 def add_data_to_new_row():
     driver = WDS.get_driver()
@@ -263,13 +264,11 @@ def add_data_to_new_row():
             current_content = ExcelActions.get_cell_data(driver)  # Retrieve cell content
             if not current_content:  # If the cell is empty
                 ActionChains(driver).send_keys(item).perform()
-                ExcelActions.shift_column(driver, Direction.RIGHT)  # Move to the next column
+                ExcelActions.shift_column(driver, Direction.RIGHT, by_column=1)  # Move to the next column
 
         # Once data is entered, navigate to the next row in the first column
-        current_cell = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#FormulaBar-NameBox-input'))).get_attribute('value')
-        current_row = ExcelActions.__extract_num(current_cell)
-        next_row_first_column = f"A{current_row + 1}"
-        ExcelActions.go_to_cell(driver, next_row_first_column)
+        ExcelActions.shift_column(driver, Direction.LEFT, by_column=len(data))
+        ExcelActions.shift_row(driver, Direction.DOWN, until=ActionTypes.NTH_CELL, nth_row=1)
 
     except Exception as e:
         # Return a more detailed error message for debugging
