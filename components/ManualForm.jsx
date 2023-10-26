@@ -13,13 +13,13 @@ import {
   ConfigProvider,
 } from "antd";
 import Question from "@/utils/Question";
-import { validatesID, validatesName } from "@/utils/formValidator";
+import validateUtils from "@/utils/formValidator";
 import { useState } from "react";
 
 /**
  * A component for user to manually fill out form for the checkin process
  */
-function TypeMapping({question, value}) {
+function TypeMapping({ question, value }) {
   switch (question) {
     case "Text":
       return <Input placeholder="Enter your text"></Input>;
@@ -32,7 +32,12 @@ function TypeMapping({question, value}) {
   }
 }
 
-export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}) {
+export default function ManualForm({
+  questions,
+  isOpen,
+  scannedData,
+  cancelFunc,
+}) {
   const [form] = Form.useForm(); // Storing the reference to the form
   const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
 
@@ -45,7 +50,8 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
       // console.log(typeof value);
       let mid = key.slice(0, key.length - 2);
       if (!(mid in result)) result[mid] = [];
-      if (typeof value == "object") value = value.format("YYYY-MM-DD HH:mm:ss");
+      if (typeof value == "object") value = value.format("DD/MM/YYYY");
+      if (typeof value == "string") value = value.trim();
       result[mid] = [...result[mid], value];
     }
     console.log("Success:", result);
@@ -96,13 +102,16 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
             contentBg: "#ffffff",
           },
         },
-    }}
+      }}
     >
       {/* Modal for manual input form */}
       <Modal
         open={open}
         // onOk={handleOk}
-        onCancel={() => {handleCancel(); cancelFunc()}}
+        onCancel={() => {
+          handleCancel();
+          cancelFunc();
+        }}
         width={"70%"}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
@@ -159,14 +168,31 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
                   // Custome input validator base on different question type
                   ({ getFieldValue }) => ({
                     validator(_, value) {
+                      // If the question is not required the the input value is empty then validates as true
+                      if (
+                        !question.required &&
+                        (question.type === "sID" ||
+                          question.type === "Name" ||
+                          question.type === "Text")
+                      ) {
+                        if (value === undefined) return Promise.resolve();
+                        if (value.trim() === "") return Promise.resolve();
+                      }
                       switch (question.type) {
                         case "sID":
-                          if (validatesID(value)) return Promise.resolve();
+                          if (validateUtils.validatesID(value))
+                            return Promise.resolve();
                           return Promise.reject(new Error("Invalid sID field"));
 
                         case "Name":
-                          if (validatesName(value)) return Promise.resolve();
+                          if (validateUtils.validatesName(value))
+                            return Promise.resolve();
                           return Promise.reject(new Error("Invalid name"));
+
+                        case "Text":
+                          if (validateUtils.validatesText(value))
+                            return Promise.resolve();
+                          return Promise.reject(new Error("Invalid text"));
 
                         default:
                           return Promise.resolve();
@@ -204,14 +230,14 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
         </Form>
       </Modal>
       {/* Manual Input Button */}
-        <Button
-          size="large"
-          className="w-full"
-          type='default'
-          onClick={showModal}
-        >
-          Manual Input
-        </Button>
+      <Button
+        size="large"
+        className="w-full"
+        type="default"
+        onClick={showModal}
+      >
+        Manual Input
+      </Button>
     </ConfigProvider>
   );
 }
