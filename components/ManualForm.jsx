@@ -19,20 +19,30 @@ import { useState } from "react";
 /**
  * A component for user to manually fill out form for the checkin process
  */
-function TypeMapping({question, value}) {
-  switch (question) {
-    case "Text":
-      return <Input placeholder="Enter your text"></Input>;
-    case "sID":
-      return <Input placeholder="Enter your sID" value={value.sid}></Input>;
-    case "Name":
-      return <Input placeholder="Enter your name" value={value.name}></Input>;
-    case "Date":
-      return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
-  }
-}
 
 export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}) {
+  function typeMapping({question, options, value}) {
+    switch (question) {
+      case "Text":
+        return <Input placeholder="Enter your text"/>;
+      case "sID":
+        return <Input placeholder="Enter your sID" />;
+      case "Name":
+        return <Input placeholder="Enter your name" />;
+      case "Date":
+        return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
+      case "Multiple choice":
+        return 
+        <Select
+          placeholder="Enter your option"
+          style={{ width: 500 }}
+          options={options}
+          allowClear={true}
+        />;
+      default:
+        return <Input placeholder="Enter your text"/>;
+    }
+  }
   const [form] = Form.useForm(); // Storing the reference to the form
   const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
 
@@ -52,7 +62,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
     form.resetFields();
     messageApi.open({
       type: "success",
-      content: "Submitted successfully",
+      content: "Update successfully",
       duration: 1.5,
     });
   };
@@ -62,7 +72,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
     console.log("Failed:", errorInfo);
     messageApi.open({
       type: "error",
-      content: "Unable to submit",
+      content: "Unable to update",
     });
   };
 
@@ -75,14 +85,6 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
 
   const handleCancel = () => {
     setOpen(false);
-  };
-
-  // Mapping each question type into different input field
-  const typeMapping = {
-    Text: <Input placeholder="Enter your text"></Input>,
-    sID: <Input placeholder="Enter your sID"></Input>,
-    Name: <Input placeholder="Enter your name"></Input>,
-    Date: <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />,
   };
 
   return (
@@ -131,6 +133,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
+          // action={}
         >
           {/* Mapping each question into an input field using the question attributes */}
           {questions.map((question) => {
@@ -176,22 +179,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
                 ]}
               >
                 {/* Rendering the multiple choice input directly due to the need of choice attribute from question */}
-                {question.type == "Multiple choice" ? (
-                  // <Radio.Group>
-                  //   {choices.map((choice) => {
-                  //     return <Radio value={choice}>{choice}</Radio>;
-                  //   })}
-                  // </Radio.Group>
-                  <Select
-                    placeholder="Enter your option"
-                    style={{ width: 500 }}
-                    options={selectChoice}
-                    allowClear={true}
-                  />
-                ) : (
-                  // If not multiple choice question, then using the typeMapping to map to the corresponding question type
-                  <TypeMapping question={question.type} value={scannedData} />
-                )}
+                {typeMapping({question: question.type, options: selectChoice, value: question.value})}
               </Form.Item>
             );
           })}
