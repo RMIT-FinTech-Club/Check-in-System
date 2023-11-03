@@ -9,7 +9,7 @@ import json
 # import pytesseract
 # import PIL.Image
 ## Import socket io publish message function
-# from controller.socket.publishMessage import publishMess
+from controller.socket.publishMessage import publishMess
 from queue import Queue
 
 # Use the client to make requests to the Vision API
@@ -100,7 +100,7 @@ def generate_frames():
                     # break
                     # return (redirect("/test-api"))
                     ## Test socket io publish message
-                    # publishMess()
+                    publishMess()
                     ## Test sse (if the messages queue is empty, then put a new message to the queue)
                     if (messages.empty()): messages.put("1")
                     

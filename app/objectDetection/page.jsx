@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 export default function Page() {
   // initialize socket
-  // const socket = io("http://localhost:5328");
+  const socket = io("http://localhost:5328");
   const [screenshotStatus, setScreenshotStatus] = useState("Initializing...");
 
   // RxJS test
@@ -41,10 +41,10 @@ export default function Page() {
   // }, []);
 
   // socket io test
-  // socket.on("message", (res) => {
-  //   console.log(res);
-  //   setScreenshotStatus("Receive an event");
-  // });
+  socket.on("message", (res) => {
+    console.log(res);
+    setScreenshotStatus("Receive an event");
+  });
   return (
     <div className="content">
       <h1>Camera Feed</h1>
