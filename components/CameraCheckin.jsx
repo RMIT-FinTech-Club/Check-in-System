@@ -1,10 +1,9 @@
 import { Button, Modal, ConfigProvider, Space } from "antd";
 import { CameraOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ManualForm from "@/components/ManualForm";
 import { WebcamFeed } from "./ObjectDetection";
 import { io } from "socket.io-client";
-
 
 export default function CameraCheckin({ questions }) {
   // Fetch scan data when received signal
@@ -12,7 +11,9 @@ export default function CameraCheckin({ questions }) {
     fetch("/api/objectDetection/get_text")
       .then((response) => response.json())
       .then((data) => {
-        setScannedData(data);
+        if (data.ID) {
+          setScannedData(data);
+        }
       })
       .catch((err) => console.log(err));
   } 
@@ -21,16 +22,16 @@ export default function CameraCheckin({ questions }) {
     setIsReceived(false);
   }
 
+  
   const socket = io("http://localhost:5328");
-
-
+  
+  
   // Handling camera opening and closing
   const [cameraOpen, setCameraOpen] = useState(false);
   const [isReceived, setIsReceived] = useState(false);
   const [scannedData, setScannedData] = useState(null);
-
-  const [test, setTest] = useState("test");
-
+  const input = useRef(null);
+  
   const showCamera = () => {
     setCameraOpen(true);
   };
@@ -41,6 +42,7 @@ export default function CameraCheckin({ questions }) {
 
   socket.on("message", (res) => {
     setIsReceived(true);
+    getScannedData();
   });
 
   return (
@@ -65,11 +67,11 @@ export default function CameraCheckin({ questions }) {
           cancelButtonProps={{ style: { display: "none" } }}
         >
           <WebcamFeed />
+          {}
           {
-            isReceived &&
+            (isReceived && scannedData) &&
               <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={handleClose}></ManualForm>
           }
-         
         </Modal>
         <div className="flex justify-center">
           <Button
