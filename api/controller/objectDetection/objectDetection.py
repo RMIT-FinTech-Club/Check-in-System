@@ -173,7 +173,7 @@ def get_text():
             "{}\nFor more info on error messages, check: "
             "https://cloud.google.com/apis/design/errors".format(response.error.message)
         )
-    
+
     try:
     # Attempt to delete the file
         os.remove(path)
@@ -185,6 +185,8 @@ def get_text():
     
     # Return the results as JSON
     return jsonify({"Name" : name, "ID" : id})
+
+    # return jsonify({"text": response.text_annotations[0].description})
 
 
 # get_text()
@@ -250,6 +252,6 @@ def queue():
         # If message queue is not empty, than send an signal to the front end that screenshot has taken
         if (messages.empty() is False):
             mid = messages.get()
-            return f"data: 'taken'\n\n"
-        return f"data: 'waiting'"
+            return "data: 'taken'\n\n"
+        return "data: 'waiting'"
     return Response(getQueue(), mimetype='text/event-stream')
