@@ -36,6 +36,7 @@ def switch_to_iframe(driver):
 def create_driver_options() -> Options:
     driver_option = Options()
     driver_option.add_experimental_option("detach", True)
+    driver_option.add_argument("--window-position=2000,2000")
     driver_option.page_load_strategy = 'eager'
     return driver_option
 
@@ -70,6 +71,7 @@ def access_excel():
 
     # email input
     try:
+        # driver.execute_script("window.minimize();")
         email_field = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'i0116')))
         email_field.send_keys(EMAIL)
 
@@ -94,6 +96,14 @@ def access_excel():
     except TimeoutException:
         return jsonify({'message': 'Could not continue'}), 500
 
+    try:
+        # Switch to iframe if possible
+        switch_to_iframe(driver)
+        time.sleep(5)
+        action = ActionChains(driver)
+        action.send_keys(Keys.ENTER).perform()
+    except Exception:
+        pass
     return jsonify({'message': 'Request processed successfully'})
 
 
