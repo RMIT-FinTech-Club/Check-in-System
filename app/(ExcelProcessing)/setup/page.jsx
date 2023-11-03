@@ -115,6 +115,7 @@ export default function Setup() {
                 }}
                 currentFocus={currentFocus}
                 key={value.title}
+                key={value.id + value.title} // Add key prop that changes when title changes
                 question={value}
                 deleteQuestion={() => {
                   deleteQuestion(value.id);
