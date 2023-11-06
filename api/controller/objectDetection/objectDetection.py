@@ -188,70 +188,17 @@ def get_text():
 
     # return jsonify({"text": response.text_annotations[0].description})
 
-
-# get_text()
-# @objectDetection_blueprint.route('/get_text')
-# def get_text():
-#     # Read image
-
-#     #Pyteseract OCR 
-#     # img = PIL.Image.open("./api/assets/images/screenshot.jpg")
-#     # # Convert image to string
-#     # text = pytesseract.image_to_string(img, config=myconfig)
-#     # # Print text
-#     # print(text)
-
-#     # Space OCR
-#     """ OCR.space API request with local file.
-#         Python3.5 - not tested on 2.7
-#     :param filename: Your file path & name.
-#     :param overlay: Is OCR.space overlay required in your response.
-#                     Defaults to False.
-#     :param api_key: OCR.space API key.
-#                     Defaults to 'helloworld'.
-#     :param language: Language code to be used in OCR.
-#                     List of available language codes can be found on https://ocr.space/OCRAPI
-#                     Defaults to 'en'.
-#     :return: Result in JSON format.
-#     """
-#     filename = "./api/assets/images/screenshot.jpg"
-#     payload = {'isOverlayRequired': False,
-#                'apikey': "K83478507788957",
-#                'language': "eng",
-#                }
-#     with open(filename, 'rb') as f:
-#         r = requests.post('https://api.ocr.space/parse/image',
-#                           files={filename: f},
-#                           data=payload,
-#                           )
-    
-#     response_data = r.json()
-#     results = response_data["ParsedResults"][0]["ParsedText"]
-#     # print(results)
-#     f.close()
-
-#     results = results.replace("\r", "").split("\n")
-#     results = results [:2]
-    
-
-#     # Current Space OCR (Uncomment below for current OCR return)
-#     return jsonify({"Name" : results[0], "ID" : results[1]})
-
-#     # Pytesseract (Uncomment below for pytesseract return)
-#     # return jsonify({"text": text})
-
-
 @socketio.on('connect', namespace='/objectDetection')
 def handle_connect():
     print('A client connected to the objectDetection namespace')
 
 
-@objectDetection_bp.route('/queue')
-def queue():
-    def getQueue():
-        # If message queue is not empty, than send an signal to the front end that screenshot has taken
-        if (messages.empty() is False):
-            mid = messages.get()
-            return "data: 'taken'\n\n"
-        return "data: 'waiting'"
-    return Response(getQueue(), mimetype='text/event-stream')
+# @objectDetection_bp.route('/queue')
+# def queue():
+#     def getQueue():
+#         # If message queue is not empty, than send an signal to the front end that screenshot has taken
+#         if (messages.empty() is False):
+#             mid = messages.get()
+#             return "data: 'taken'\n\n"
+#         return "data: 'waiting'"
+#     return Response(getQueue(), mimetype='text/event-stream')
