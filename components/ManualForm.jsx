@@ -26,9 +26,9 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
       case "Text":
         return <Input placeholder="Enter your text"/>;
       case "sID":
-        return <Input placeholder="Enter your sID" />;
+        return <Input placeholder="Enter your sID" defaultValue={scannedData && scannedData.ID}/>;
       case "Name":
-        return <Input placeholder="Enter your name" />;
+        return <Input placeholder="Enter your name" defaultValue={scannedData && scannedData.Name}/>;
       case "Date":
         return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
       case "Multiple choice":
