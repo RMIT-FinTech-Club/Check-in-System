@@ -273,7 +273,7 @@ def add_data_to_new_row():
         for item in data:
             current_content = ExcelActions.get_cell_data(driver)  # Retrieve cell content
             if not current_content:  # If the cell is empty
-                ActionChains(driver).send_keys(item[0]).perform()
+                ActionChains(driver).send_keys(item).perform()
                 ExcelActions.shift_column(driver, Direction.RIGHT, by_column=1)  # Move to the next column
 
         # Once data is entered, navigate to the next row in the first column

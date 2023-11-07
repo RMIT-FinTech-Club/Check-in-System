@@ -30,15 +30,14 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
       case "Text":
         return <Input placeholder="Enter your text"/>;
       case "sID":
-        return <Input placeholder="Enter your sID" defaultValue={scannedData && scannedData.ID}/>;
+        return <Input placeholder="Enter your sID" />;
       case "Name":
-        return <Input placeholder="Enter your name" defaultValue={scannedData && scannedData.Name}/>;
+        return <Input placeholder="Enter your name" />;
       case "Date":
         return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
       case "Multiple choice":
         return <Select
           placeholder="Enter your option"
-          style={{ width: 500 }}
           options={options}
           allowClear={true}
         />;
@@ -53,8 +52,6 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
         const response = await axios.post('/api/excel/add-data-to-new-row', {
             data: result 
         });
-        
-        console.log('suceess');
     } catch (error) {
         console.error('Error submitting data:', error);
     }
@@ -63,22 +60,16 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
   // Handling when a form is submitted successfully
   const onFinish = async (values) => {
 
-    let result = {};
-
     // Removing id from form input name and return (need updates)
     for (let [key, value] of Object.entries(values)) {
-      let mid = key.slice(0, key.length - 2);
-      if (!(mid in result)) result[mid] = [];
       if (typeof value == "object") value = value.format("DD/MM/YYYY");
       if (typeof value == "string") value = value.trim();
-      result[mid] = [...result[mid], value];
     }
 
-    console.log(Object.values(result));
-    await submitDataToRow(Object.values(result));
+    await submitDataToRow(Object.values(values));
     form.resetFields();
-    console.log(typeof notifySuccess);
     cancelFunc();
+    handleCancel();
     notifySuccess();
   };
 
@@ -100,8 +91,14 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
   };
 
   const fillData = () => {
-    
+    if (scannedData) {
+      form.setFieldsValue({
+        sID: `s${scannedData.ID}`,
+        Name: scannedData.Name,
+      });
+    }
   }
+  fillData();
 
   return (
     <ConfigProvider
@@ -166,7 +163,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
               <Form.Item
                 key={question.id}
                 label={title.charAt(0).toUpperCase() + title.slice(1)}
-                name={`${question.title}-${question.id}`} // Combining name with object id to create unique name for form input
+                name={(question.type == 'sID' || question.type == 'Name') ? question.type : `${question.title}`} // Combining name with object id to create unique name for form input
                 rules={[
                   {
                     required: question.required,

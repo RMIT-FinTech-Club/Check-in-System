@@ -56,6 +56,11 @@ export default function CameraCheckin({ questions }) {
     setCameraOpen(false);
   };
 
+  const cancelFunc = () => {
+    handleClose();
+    setIsReceived(false);
+  }
+
   socket.on("message", (res) => {
     setIsReceived(true);
     getScannedData();
@@ -86,7 +91,7 @@ export default function CameraCheckin({ questions }) {
           <WebcamFeed />
           {
             (isReceived && scannedData) &&
-              <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={() => {handleClose(); setIsReceived(false)}} notifySuccess={() => notifySuccess()} notifyError={() => notifyError()}></ManualForm>
+              <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={cancelFunc} notifySuccess={notifySuccess} notifyError={notifyError}></ManualForm>
           }
         </Modal>
         <div className="flex justify-center">
