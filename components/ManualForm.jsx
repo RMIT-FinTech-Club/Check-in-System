@@ -14,13 +14,24 @@ import {
 } from "antd";
 import Question from "@/utils/Question";
 import validateUtils from "@/utils/formValidator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 /**
  * A component for user to manually fill out form for the checkin process
  */
 
+
 export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}) {
+  const [name, setName] = useState('');
+  const [id, setId] = useState('');
+
+  // Set name and id to the scanned data
+  useEffect(() => {
+    setName(scannedData && scannedData.Name);
+    setId(scannedData && scannedData.ID);
+  }, []);
+
   function typeMapping({question, options, value}) {
     switch (question) {
       case "Text":
@@ -32,8 +43,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
       case "Date":
         return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
       case "Multiple choice":
-        return 
-        <Select
+        return <Select
           placeholder="Enter your option"
           style={{ width: 500 }}
           options={options}
@@ -46,8 +56,21 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
   const [form] = Form.useForm(); // Storing the reference to the form
   const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
 
+  async function submitDataToRow(result) {
+    try {
+        const response = await axios.post('/api/excel/add-data-to-new-row', {
+            data: result 
+        });
+        
+        console.log('suceess');
+    } catch (error) {
+        console.error('Error submitting data:', error);
+    }
+  }
+
   // Handling when a form is submitted successfully
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    
     let result = {};
 
     // Removing id from form input name and return (need updates)
@@ -59,7 +82,11 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
       if (typeof value == "string") value = value.trim();
       result[mid] = [...result[mid], value];
     }
-    console.log("Success:", result);
+    // console.log(name, id);
+
+    await submitDataToRow(Object.values(result));
+    console.log('object');
+    console.log(result);
     form.resetFields();
     messageApi.open({
       type: "success",

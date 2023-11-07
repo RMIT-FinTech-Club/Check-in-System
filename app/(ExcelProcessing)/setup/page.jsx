@@ -19,7 +19,10 @@ export default function Setup() {
   const [headerPosition, setHeaderPosition] = useState("A1");
 
   // Storing information of all the questions during setup
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([
+    new Question({ title: "Your Name", id: "0", type: "Name" }),
+    new Question({ title: "Your sID", id: "1", type: "sID" }),
+  ]);
 
   const [currentFocus, setCurrentFocus] = useState(null);
   const router = useRouter();
