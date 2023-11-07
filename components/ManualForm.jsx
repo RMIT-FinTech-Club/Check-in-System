@@ -11,6 +11,7 @@ import {
   Modal,
   Select,
   ConfigProvider,
+  notification,
 } from "antd";
 import Question from "@/utils/Question";
 import validateUtils from "@/utils/formValidator";
@@ -22,15 +23,7 @@ import axios from "axios";
  */
 
 
-export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}) {
-  const [name, setName] = useState('');
-  const [id, setId] = useState('');
-
-  // Set name and id to the scanned data
-  useEffect(() => {
-    setName(scannedData && scannedData.Name);
-    setId(scannedData && scannedData.ID);
-  }, []);
+export default function ManualForm({ questions, isOpen, scannedData, cancelFunc, notify}) {
 
   function typeMapping({question, options, value}) {
     switch (question) {
@@ -54,7 +47,8 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
     }
   }
   const [form] = Form.useForm(); // Storing the reference to the form
-  const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
+  // const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
+  const [api, contextHolder] = notification.useNotification(); // Managing pop up message when submit form
 
   async function submitDataToRow(result) {
     try {
@@ -82,17 +76,10 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
       if (typeof value == "string") value = value.trim();
       result[mid] = [...result[mid], value];
     }
-    // console.log(name, id);
-
     await submitDataToRow(Object.values(result));
-    console.log('object');
-    console.log(result);
     form.resetFields();
-    messageApi.open({
-      type: "success",
-      content: "Update successfully",
-      duration: 1.5,
-    });
+    notify();
+    // cancelFunc();
   };
 
   // Handling when a form failed to submit
@@ -133,7 +120,6 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
         open={open}
         // onOk={handleOk}
         onCancel={() => {
-          handleCancel();
           cancelFunc();
         }}
         width={"70%"}
