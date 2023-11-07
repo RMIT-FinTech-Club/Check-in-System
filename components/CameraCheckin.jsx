@@ -6,17 +6,25 @@ import { WebcamFeed } from "./ObjectDetection";
 import { io } from "socket.io-client";
 
 export default function CameraCheckin({ questions }) {
-  function notify() {
-    api.open({
-      type: "success",
-      content: "Update successfully",
+  function notifySuccess() {
+    api['success']({
+      message: "Success",
+      description: "Update successfully",
+      duration: 1.5,
+    });
+  }
+
+  function notifyError() {
+    api['error']({
+      message: "Error",
+      description: "Update failed",
       duration: 1.5,
     });
   }
 
   // Fetch scan data when received signal
-  function getScannedData() {
-    fetch("/api/objectDetection/get_text")
+  async function getScannedData() {
+    await fetch("/api/objectDetection/get_text")
       .then((response) => response.json())
       .then((data) => {
         if (data.ID) {
@@ -68,6 +76,7 @@ export default function CameraCheckin({ questions }) {
           },
         }}
       >
+        {contextHolder}
         <Modal
           open={cameraOpen}
           onCancel={closeCamera}
@@ -75,10 +84,9 @@ export default function CameraCheckin({ questions }) {
           cancelButtonProps={{ style: { display: "none" } }}
         >
           <WebcamFeed />
-          {contextHolder}
           {
             (isReceived && scannedData) &&
-              <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={() => {handleClose(); setIsReceived(false)}} notify={() => notify()}></ManualForm>
+              <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={() => {handleClose(); setIsReceived(false)}} notifySuccess={() => notifySuccess()} notifyError={() => notifyError()}></ManualForm>
           }
         </Modal>
         <div className="flex justify-center">

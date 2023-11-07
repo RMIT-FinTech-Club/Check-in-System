@@ -23,7 +23,7 @@ import axios from "axios";
  */
 
 
-export default function ManualForm({ questions, isOpen, scannedData, cancelFunc, notify}) {
+export default function ManualForm({ questions, isOpen, scannedData, cancelFunc, notifySuccess, notifyError}) {
 
   function typeMapping({question, options, value}) {
     switch (question) {
@@ -47,8 +47,6 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
     }
   }
   const [form] = Form.useForm(); // Storing the reference to the form
-  // const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
-  const [api, contextHolder] = notification.useNotification(); // Managing pop up message when submit form
 
   async function submitDataToRow(result) {
     try {
@@ -64,31 +62,30 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
 
   // Handling when a form is submitted successfully
   const onFinish = async (values) => {
-    
+
     let result = {};
 
     // Removing id from form input name and return (need updates)
     for (let [key, value] of Object.entries(values)) {
-      // console.log(typeof value);
       let mid = key.slice(0, key.length - 2);
       if (!(mid in result)) result[mid] = [];
       if (typeof value == "object") value = value.format("DD/MM/YYYY");
       if (typeof value == "string") value = value.trim();
       result[mid] = [...result[mid], value];
     }
+
+    console.log(Object.values(result));
     await submitDataToRow(Object.values(result));
     form.resetFields();
-    notify();
-    // cancelFunc();
+    console.log(typeof notifySuccess);
+    cancelFunc();
+    notifySuccess();
   };
 
   // Handling when a form failed to submit
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-    messageApi.open({
-      type: "error",
-      content: "Unable to update",
-    });
+    notifyError();
   };
 
   // Handling modal opening and closing
@@ -101,6 +98,10 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
   const handleCancel = () => {
     setOpen(false);
   };
+
+  const fillData = () => {
+    
+  }
 
   return (
     <ConfigProvider
@@ -118,19 +119,16 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
       {/* Modal for manual input form */}
       <Modal
         open={open}
-        // onOk={handleOk}
         onCancel={() => {
+          handleCancel();
           cancelFunc();
         }}
         width={"70%"}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
       >
-        <h1 className="h2 text-center"> Manual Input Form </h1>
+        <h1 className="h2 text-center"> Input Form </h1>
         {/* Manual Input form component */}
-
-        {/* Pop up message when a form is submit */}
-        {contextHolder}
 
         <Form
           layout="vertical"
