@@ -2,7 +2,6 @@ from flask import Flask
 # from flask_cors import CORS
 # Importing blueprints
 from controller.excel.pyxcel import pyxcel_bp
-from controller.test import hello_world
 from controller.objectDetection.object_detection import objectDetection_bp
 # Import socket intialize object
 from controller.socket.socketio import socketio
@@ -19,4 +18,4 @@ socketio.init_app(app)
 # Routes
 @app.route("/api/python")
 def use_hello_world():
-    return hello_world()
+    return "<p>Hello, World!</p>"

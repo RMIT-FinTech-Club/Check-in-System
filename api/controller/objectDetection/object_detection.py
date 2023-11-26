@@ -38,7 +38,7 @@ def generate_frames():
 
     # Timer variables
     start_time = None
-    duration_threshold = 2.0 # 2 seconds
+    duration_threshold = 0.8 # Time in seconds to capture image
 
     while True:
         success, frame = camera.read()
