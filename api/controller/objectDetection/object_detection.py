@@ -131,7 +131,7 @@ def get_text():
     from google.cloud import vision
 
     # Set the path to your service account key JSON file
-    key_path = 'api/assets/api-keys/oval-relic-397016-46a089001c8b.json'
+    key_path = 'api/assets/api-keys/euphoric-coral-406216-e28e7a467072.json'
 
     # Initialize the Vision API client with the key
     client = vision.ImageAnnotatorClient.from_service_account_file(key_path)
