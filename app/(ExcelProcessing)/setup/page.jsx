@@ -73,7 +73,7 @@ export default function Setup() {
 
   async function queryHeaders() {
     try {
-        const response = await axios.post('/api/excel/query-headers', {
+        const response = await axios.post('localhost:3000/api/excel/query-headers', {
           header_position : headerPosition
         });
         const headers = response.data.headers;

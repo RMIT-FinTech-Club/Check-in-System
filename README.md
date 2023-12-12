@@ -67,6 +67,34 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The Flask server will be running on [http://127.0.0.1:5328](http://127.0.0.1:5328) – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
 
+## Requirment
+
+- NodeJS - `v20.9.0`
+- npm - `v10.1.0`
+- Python - `v3.11.x` <span style="color: #CC3300">*<span/>
+- pip - `v23.2.1` (Installed with python 3.11.x)
+
+> Important note: While language version can be used from the specified to later releases, it is recommended to use the same as specified above since later releases might break the code. \
+\
+> [*] Python version is required to be `v3.11.x` (latest release: `v3.11.6`) since from version `3.12` and above break the code.
+
+## Tech stack
+
+### Front end
+
+- [ReactJS](https://react.dev/) - Framework for building frontend using NodeJS
+- [NextJS](https://nextjs.org/) - Framework built on top of ReactJS
+- [AntDesign](https://ant.design/) - Component library for ReactJS
+- [Tailwindcss](https://tailwindcss.com/) - A Utility-first CSS framework
+- [Axios](https://axios-http.com/docs/intro) - A HTTP request library
+
+### Back end
+
+- [Python](https://www.python.org/) - Main programming language for the backend
+- [Flask](https://flask.palletsprojects.com/en/3.0.x/) - A backend framwork for Python
+- [Selenium](https://www.selenium.dev/) - A web-automation library used for interaction with Excel online
+- [OpenCV](https://opencv.org/) - A library used for real-time computer vision
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
