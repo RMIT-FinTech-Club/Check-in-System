@@ -2,7 +2,7 @@ from flask import Flask
 # from flask_cors import CORS
 # Importing blueprints
 from controller.excel.pyxcel import pyxcel_bp
-from controller.objectDetection.objectDetection import objectDetection_bp
+from controller.objectDetection.object_detection import objectDetection_bp
 # Import socket intialize object
 from controller.socket.socketio import socketio
 
