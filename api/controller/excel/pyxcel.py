@@ -71,21 +71,20 @@ def access_excel():
 
     # email input
     try:
-        # driver.execute_script("window.minimize();")
-        email_field = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'i0116')))
+        email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0116')))
         email_field.send_keys(EMAIL)
 
-        next_btn = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+        next_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
         next_btn.send_keys(Keys.ENTER)
     except TimeoutException:
         return jsonify({'message': 'Somthing was wrong with the email'}), 500
 
     # password input
     try:
-        email_field = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'i0118')))
+        email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0118')))
         email_field.send_keys(PASSWORD)
 
-        next_btn = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+        next_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
         next_btn.send_keys(Keys.ENTER)
     except TimeoutException:
         return jsonify({'message': 'Somthing was wrong with the password'}), 500

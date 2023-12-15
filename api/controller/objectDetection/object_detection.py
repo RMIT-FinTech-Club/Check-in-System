@@ -38,7 +38,7 @@ def generate_frames():
 
     # Timer variables
     start_time = None
-    duration_threshold = 0.5 # 2 seconds
+    duration_threshold = 0.8 # Time in seconds to capture image
 
     while True:
         success, frame = camera.read()
@@ -88,7 +88,6 @@ def generate_frames():
 
 
                     cv2.imwrite("./api/assets/images/screenshot.jpg", screenshot)
-                    cv2.imwrite("./api/assets/images/dontdelete.jpg", screenshot)
 
                     # Emit message to client with message only
                     # socketio.emit("screenshot_saved", {"message": "Screenshot taken."}, namespace='/objectDetection')
