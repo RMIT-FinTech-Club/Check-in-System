@@ -1,4 +1,4 @@
-import { Button, Modal, ConfigProvider, Space } from "antd";
+import { Button, Modal, ConfigProvider, Space, notification } from "antd";
 import { CameraOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import ManualForm from "@/components/ManualForm";
@@ -6,9 +6,25 @@ import { WebcamFeed } from "./ObjectDetection";
 import { io } from "socket.io-client";
 
 export default function CameraCheckin({ questions }) {
+  function notifySuccess() {
+    api['success']({
+      message: "Success",
+      description: "Update successfully",
+      duration: 1.5,
+    });
+  }
+
+  function notifyError() {
+    api['error']({
+      message: "Error",
+      description: "Update failed",
+      duration: 1.5,
+    });
+  }
+
   // Fetch scan data when received signal
-  function getScannedData() {
-    fetch("/api/objectDetection/get_text")
+  async function getScannedData() {
+    await fetch("/api/objectDetection/get_text")
       .then((response) => response.json())
       .then((data) => {
         if (data.ID) {
@@ -30,7 +46,7 @@ export default function CameraCheckin({ questions }) {
   const [cameraOpen, setCameraOpen] = useState(false);
   const [isReceived, setIsReceived] = useState(false);
   const [scannedData, setScannedData] = useState(null);
-  const input = useRef(null);
+  const [api, contextHolder] = notification.useNotification(); // Managing pop up message when submit form
   
   const showCamera = () => {
     setCameraOpen(true);
@@ -39,6 +55,11 @@ export default function CameraCheckin({ questions }) {
   const closeCamera = () => {
     setCameraOpen(false);
   };
+
+  const cancelFunc = () => {
+    handleClose();
+    setIsReceived(false);
+  }
 
   socket.on("message", (res) => {
     setIsReceived(true);
@@ -60,6 +81,7 @@ export default function CameraCheckin({ questions }) {
           },
         }}
       >
+        {contextHolder}
         <Modal
           open={cameraOpen}
           onCancel={closeCamera}
@@ -67,10 +89,9 @@ export default function CameraCheckin({ questions }) {
           cancelButtonProps={{ style: { display: "none" } }}
         >
           <WebcamFeed />
-          {}
           {
             (isReceived && scannedData) &&
-              <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={handleClose}></ManualForm>
+              <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={cancelFunc} notifySuccess={notifySuccess} notifyError={notifyError}></ManualForm>
           }
         </Modal>
         <div className="flex justify-center">

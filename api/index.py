@@ -18,4 +18,4 @@ socketio.init_app(app)
 # Routes
 @app.route("/api/python")
 def use_hello_world():
-    return "<p>Hello, World!</p>"
+    return "<div>Hello World!</div>"

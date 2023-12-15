@@ -11,31 +11,33 @@ import {
   Modal,
   Select,
   ConfigProvider,
+  notification,
 } from "antd";
 import Question from "@/utils/Question";
 import validateUtils from "@/utils/formValidator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 /**
  * A component for user to manually fill out form for the checkin process
  */
 
-export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}) {
+
+export default function ManualForm({ questions, isOpen, scannedData, cancelFunc, notifySuccess, notifyError}) {
+
   function typeMapping({question, options, value}) {
     switch (question) {
       case "Text":
         return <Input placeholder="Enter your text"/>;
       case "sID":
-        return <Input placeholder="Enter your sID" defaultValue={scannedData && scannedData.ID}/>;
+        return <Input placeholder="Enter your sID" />;
       case "Name":
-        return <Input placeholder="Enter your name" defaultValue={scannedData && scannedData.Name}/>;
+        return <Input placeholder="Enter your name" />;
       case "Date":
         return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
       case "Multiple choice":
-        return 
-        <Select
+        return <Select
           placeholder="Enter your option"
-          style={{ width: 500 }}
           options={options}
           allowClear={true}
         />;
@@ -44,37 +46,37 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
     }
   }
   const [form] = Form.useForm(); // Storing the reference to the form
-  const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
+
+  async function submitDataToRow(result) {
+    try {
+        const response = await axios.post('/api/excel/add-data-to-new-row', {
+            data: result 
+        });
+    } catch (error) {
+        console.error('Error submitting data:', error);
+    }
+  }
 
   // Handling when a form is submitted successfully
-  const onFinish = (values) => {
-    let result = {};
+  const onFinish = async (values) => {
 
     // Removing id from form input name and return (need updates)
     for (let [key, value] of Object.entries(values)) {
-      // console.log(typeof value);
-      let mid = key.slice(0, key.length - 2);
-      if (!(mid in result)) result[mid] = [];
       if (typeof value == "object") value = value.format("DD/MM/YYYY");
       if (typeof value == "string") value = value.trim();
-      result[mid] = [...result[mid], value];
     }
-    console.log("Success:", result);
+
+    await submitDataToRow(Object.values(values));
     form.resetFields();
-    messageApi.open({
-      type: "success",
-      content: "Update successfully",
-      duration: 1.5,
-    });
+    cancelFunc();
+    handleCancel();
+    notifySuccess();
   };
 
   // Handling when a form failed to submit
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-    messageApi.open({
-      type: "error",
-      content: "Unable to update",
-    });
+    notifyError();
   };
 
   // Handling modal opening and closing
@@ -87,6 +89,16 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
   const handleCancel = () => {
     setOpen(false);
   };
+
+  const fillData = () => {
+    if (scannedData) {
+      form.setFieldsValue({
+        sID: `s${scannedData.ID}`,
+        Name: scannedData.Name,
+      });
+    }
+  }
+  fillData();
 
   return (
     <ConfigProvider
@@ -104,7 +116,6 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
       {/* Modal for manual input form */}
       <Modal
         open={open}
-        // onOk={handleOk}
         onCancel={() => {
           handleCancel();
           cancelFunc();
@@ -113,11 +124,8 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
       >
-        <h1 className="h2 text-center"> Manual Input Form </h1>
+        <h1 className="h2 text-center"> Input Form </h1>
         {/* Manual Input form component */}
-
-        {/* Pop up message when a form is submit */}
-        {contextHolder}
 
         <Form
           layout="vertical"
@@ -155,7 +163,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc}
               <Form.Item
                 key={question.id}
                 label={title.charAt(0).toUpperCase() + title.slice(1)}
-                name={`${question.title}-${question.id}`} // Combining name with object id to create unique name for form input
+                name={(question.type == 'sID' || question.type == 'Name') ? question.type : `${question.title}`} // Combining name with object id to create unique name for form input
                 rules={[
                   {
                     required: question.required,
