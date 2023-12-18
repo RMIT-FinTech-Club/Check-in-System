@@ -2,7 +2,7 @@
  * Validate the student sID whether it is currently in the correct format
  * @param {String} sID - the student sID
  */
-function validatesID(sID) {
+function validatesID(sID = "") {
   function isNumber(char) {
     return /^\d$/.test(char);
   }
@@ -21,14 +21,27 @@ function validatesID(sID) {
  * @param {String} name - the student name
  * @returns
  */
-function validatesName(name) {
+function validatesName(name = "") {
   name = name.trim();
   if (name === "") return false;
   if (name.length < 3 || name.length > 100) return false;
   return true;
 }
 
+/**
+ * Validate random text, which assume must have more than 1 character
+ * @param {String} text - the usual text
+ * @returns
+ */
+function validatesText(text = "") {
+  text = text.trim();
+  if (text === "") return false;
+  if (text.length <= 1) return false;
+  return true;
+}
+
 module.exports = {
+  validatesText,
   validatesID,
   validatesName,
 };

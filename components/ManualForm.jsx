@@ -11,50 +11,76 @@ import {
   Modal,
   Select,
   ConfigProvider,
+  notification,
 } from "antd";
 import Question from "@/utils/Question";
-import { validatesID, validatesName } from "@/utils/formValidator";
-import { useState } from "react";
+import validateUtils from "@/utils/formValidator";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 /**
  * A component for user to manually fill out form for the checkin process
  */
-export default function ManualForm({ questions }) {
+
+
+export default function ManualForm({ questions, isOpen, scannedData, cancelFunc, notifySuccess, notifyError}) {
+
+  function typeMapping({question, options, value}) {
+    switch (question) {
+      case "Text":
+        return <Input placeholder="Enter your text"/>;
+      case "sID":
+        return <Input placeholder="Enter your sID" />;
+      case "Name":
+        return <Input placeholder="Enter your name" />;
+      case "Date":
+        return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
+      case "Multiple choice":
+        return <Select
+          placeholder="Enter your option"
+          options={options}
+          allowClear={true}
+        />;
+      default:
+        return <Input placeholder="Enter your text"/>;
+    }
+  }
   const [form] = Form.useForm(); // Storing the reference to the form
-  const [messageApi, contextHolder] = message.useMessage(); // Managing pop up message when submit form
+
+  async function submitDataToRow(result) {
+    try {
+        const response = await axios.post('/api/excel/add-data-to-new-row', {
+            data: result 
+        });
+    } catch (error) {
+        console.error('Error submitting data:', error);
+    }
+  }
 
   // Handling when a form is submitted successfully
-  const onFinish = (values) => {
-    let result = {};
+  const onFinish = async (values) => {
 
     // Removing id from form input name and return (need updates)
     for (let [key, value] of Object.entries(values)) {
-      // console.log(typeof value);
-      let mid = key.slice(0, key.length - 2);
-      if (!(mid in result)) result[mid] = [];
-      if (typeof value == "object") value = value.format("YYYY-MM-DD HH:mm:ss");
-      result[mid] = [...result[mid], value];
+      if (typeof value == "object") value = value.format("DD/MM/YYYY");
+      if (typeof value == "string") value = value.trim();
     }
-    console.log("Success:", result);
+
+    await submitDataToRow(Object.values(values));
     form.resetFields();
-    messageApi.open({
-      type: "success",
-      content: "Submitted successfully",
-      duration: 1.5,
-    });
+    cancelFunc();
+    handleCancel();
+    notifySuccess();
   };
 
   // Handling when a form failed to submit
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-    messageApi.open({
-      type: "error",
-      content: "Unable to submit",
-    });
+    notifyError();
   };
 
   // Handling modal opening and closing
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(isOpen);
 
   const showModal = () => {
     setOpen(true);
@@ -64,13 +90,15 @@ export default function ManualForm({ questions }) {
     setOpen(false);
   };
 
-  // Mapping each question type into different input field
-  const typeMapping = {
-    Text: <Input placeholder="Enter your text"></Input>,
-    sID: <Input placeholder="Enter your sID"></Input>,
-    Name: <Input placeholder="Enter your name"></Input>,
-    Date: <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />,
-  };
+  const fillData = () => {
+    if (scannedData) {
+      form.setFieldsValue({
+        sID: `s${scannedData.ID}`,
+        Name: scannedData.Name,
+      });
+    }
+  }
+  fillData();
 
   return (
     <ConfigProvider
@@ -83,22 +111,21 @@ export default function ManualForm({ questions }) {
             contentBg: "#ffffff",
           },
         },
-    }}
+      }}
     >
       {/* Modal for manual input form */}
       <Modal
         open={open}
-        // onOk={handleOk}
-        onCancel={handleCancel}
+        onCancel={() => {
+          handleCancel();
+          cancelFunc();
+        }}
         width={"70%"}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
       >
-        <h1 className="h2 text-center"> Manual Input Form </h1>
+        <h1 className="h2 text-center"> Input Form </h1>
         {/* Manual Input form component */}
-
-        {/* Pop up message when a form is submit */}
-        {contextHolder}
 
         <Form
           layout="vertical"
@@ -118,6 +145,7 @@ export default function ManualForm({ questions }) {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
+          // action={}
         >
           {/* Mapping each question into an input field using the question attributes */}
           {questions.map((question) => {
@@ -135,7 +163,7 @@ export default function ManualForm({ questions }) {
               <Form.Item
                 key={question.id}
                 label={title.charAt(0).toUpperCase() + title.slice(1)}
-                name={`${question.title}-${question.id}`} // Combining name with object id to create unique name for form input
+                name={(question.type == 'sID' || question.type == 'Name') ? question.type : `${question.title}`} // Combining name with object id to create unique name for form input
                 rules={[
                   {
                     required: question.required,
@@ -146,14 +174,31 @@ export default function ManualForm({ questions }) {
                   // Custome input validator base on different question type
                   ({ getFieldValue }) => ({
                     validator(_, value) {
+                      // If the question is not required the the input value is empty then validates as true
+                      if (
+                        !question.required &&
+                        (question.type === "sID" ||
+                          question.type === "Name" ||
+                          question.type === "Text")
+                      ) {
+                        if (value === undefined) return Promise.resolve();
+                        if (value.trim() === "") return Promise.resolve();
+                      }
                       switch (question.type) {
                         case "sID":
-                          if (validatesID(value)) return Promise.resolve();
+                          if (validateUtils.validatesID(value))
+                            return Promise.resolve();
                           return Promise.reject(new Error("Invalid sID field"));
 
                         case "Name":
-                          if (validatesName(value)) return Promise.resolve();
+                          if (validateUtils.validatesName(value))
+                            return Promise.resolve();
                           return Promise.reject(new Error("Invalid name"));
+
+                        case "Text":
+                          if (validateUtils.validatesText(value))
+                            return Promise.resolve();
+                          return Promise.reject(new Error("Invalid text"));
 
                         default:
                           return Promise.resolve();
@@ -163,22 +208,7 @@ export default function ManualForm({ questions }) {
                 ]}
               >
                 {/* Rendering the multiple choice input directly due to the need of choice attribute from question */}
-                {question.type == "Multiple choice" ? (
-                  // <Radio.Group>
-                  //   {choices.map((choice) => {
-                  //     return <Radio value={choice}>{choice}</Radio>;
-                  //   })}
-                  // </Radio.Group>
-                  <Select
-                    placeholder="Enter your option"
-                    style={{ width: 500 }}
-                    options={selectChoice}
-                    allowClear={true}
-                  />
-                ) : (
-                  // If not multiple choice question, then using the typeMapping to map to the corresponding question type
-                  typeMapping[question.type]
-                )}
+                {typeMapping({question: question.type, options: selectChoice, value: question.value})}
               </Form.Item>
             );
           })}
@@ -191,14 +221,14 @@ export default function ManualForm({ questions }) {
         </Form>
       </Modal>
       {/* Manual Input Button */}
-        <Button
-          size="large"
-          className="w-full"
-          type='default'
-          onClick={showModal}
-        >
-          Manual Input
-        </Button>
+      <Button
+        size="large"
+        className="w-full"
+        type="default"
+        onClick={showModal}
+      >
+        Manual Input
+      </Button>
     </ConfigProvider>
   );
 }

@@ -25,8 +25,8 @@ pyxcel_thread = threading.local()
 def switch_to_iframe(driver):
     # global iframe_switchable
     try:
-        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
-        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
+        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
+        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
         driver.switch_to.frame(iframe_element)
         # iframe_switchable = False
     except NoSuchElementException:
@@ -36,6 +36,7 @@ def switch_to_iframe(driver):
 def create_driver_options() -> Options:
     driver_option = Options()
     driver_option.add_experimental_option("detach", True)
+    # driver_option.add_argument("--window-position=2000,2000")
     driver_option.page_load_strategy = 'eager'
     return driver_option
 
@@ -70,20 +71,20 @@ def access_excel():
 
     # email input
     try:
-        email_field = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'i0116')))
+        email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0116')))
         email_field.send_keys(EMAIL)
 
-        next_btn = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+        next_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
         next_btn.send_keys(Keys.ENTER)
     except TimeoutException:
         return jsonify({'message': 'Somthing was wrong with the email'}), 500
 
     # password input
     try:
-        email_field = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'i0118')))
+        email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0118')))
         email_field.send_keys(PASSWORD)
 
-        next_btn = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+        next_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
         next_btn.send_keys(Keys.ENTER)
     except TimeoutException:
         return jsonify({'message': 'Somthing was wrong with the password'}), 500
@@ -94,6 +95,14 @@ def access_excel():
     except TimeoutException:
         return jsonify({'message': 'Could not continue'}), 500
 
+    try:
+        switch_to_iframe(driver)
+        time.sleep(5)
+        action = ActionChains(driver)
+        action.send_keys(Keys.ENTER).perform()
+        # action.key_down(Keys.CONTROL).send_keys(Keys.HOME).perform()
+    except Exception:
+        pass
     return jsonify({'message': 'Request processed successfully'})
 
 
@@ -198,7 +207,7 @@ def get_file_name():
     switch_to_iframe(driver)
 
     try:
-        file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span.documentTitle-254'))).get_attribute('textContent')
+        file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span'))).get_attribute('textContent')
 
     except TimeoutException:
         return jsonify({'message': 'Couldnt locate the element'}), 500
@@ -238,3 +247,40 @@ def query_header():
 
     return jsonify({'message': 'Header queried successfully',
                     'headers': headers}), 200
+
+
+@pyxcel_bp.route('/add-data-to-new-row', methods=['POST'])
+def add_data_to_new_row():
+    driver = WDS.get_driver()
+    if not driver:
+        return jsonify({'message': 'driver request failed'}), 500
+
+    json_data = request.json
+    data = json_data.get('data')
+    if not data:
+        return jsonify({'message': 'data not provided'}), 500
+
+    switch_to_iframe(driver) 
+
+    try:
+        # Navigate downwards until an empty first column cell is found
+        # Start from A1 as it's the first cell of the first column
+        ExcelActions.go_to_cell(driver, 'A1')
+        ExcelActions.shift_row(driver, Direction.DOWN, until=ActionTypes.EMPTY_CELL)
+
+        # At this point, we should be in the first column of an empty row, ready to input data
+        for item in data:
+            current_content = ExcelActions.get_cell_data(driver)  # Retrieve cell content
+            if not current_content:  # If the cell is empty
+                ActionChains(driver).send_keys(item).perform()
+                ExcelActions.shift_column(driver, Direction.RIGHT, by_column=1)  # Move to the next column
+
+        # Once data is entered, navigate to the next row in the first column
+        ExcelActions.shift_column(driver, Direction.LEFT, by_column=len(data))
+        ExcelActions.shift_row(driver, Direction.DOWN, until=ActionTypes.NTH_CELL, nth_row=1)
+
+    except Exception as e:
+        # Return a more detailed error message for debugging
+        return jsonify({'message': f"Error: {str(e)}"}), 500
+
+    return jsonify({'message': 'Record added successfully'}), 200
