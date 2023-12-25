@@ -9,6 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from .excelActions import ExcelActions, ActionTypes, Direction
 from .global_driver import Web_Driver_Singleton as WDS
 from flask import Blueprint, request, jsonify
+from socketManager import socketio
 import threading
 import time
 import sys
@@ -49,6 +50,7 @@ def index():
 
 @pyxcel_bp.route('/access', methods=['POST'])
 def access_excel():
+    socketio.emit('update_proccess', 'Validating url')
     json_data = request.json
 
     # Url
@@ -62,13 +64,16 @@ def access_excel():
         return 'Not enough data input'
 
     # Create driver
-    driver = WDS.create_driver(options=create_driver_options())
-    driver.get(excel_url)
+    WDS.create_driver(options=create_driver_options())
+    # driver.get(excel_url)
+    WDS.connect_url(excel_url)
+    driver = WDS.get_driver()
 
     # Change iframe state
     global iframe_switchable
     iframe_switchable = True
 
+    socketio.emit('update_proccess', 'Logging into Excel')
     # email input
     try:
         email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0116')))
@@ -95,6 +100,7 @@ def access_excel():
     except TimeoutException:
         return jsonify({'message': 'Could not continue'}), 500
 
+    socketio.emit('update_proccess', 'Excel accessed successfully')
     try:
         switch_to_iframe(driver)
         time.sleep(5)

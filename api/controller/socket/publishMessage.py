@@ -1,4 +1,4 @@
-from controller.socket.socketio import socketio
+from socketManager import socketio
 
 def publishMess():
     socketio.emit('message', 'hello world')

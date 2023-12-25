@@ -3,6 +3,8 @@
 import { Button, Form, Input } from "antd"
 import axios from "axios";
 import { useState } from "react";
+import socket from "lib/socketManager";
+import isUrl from "is-url";
 
 export default function LoadingForm() {
     const [validationStatus, setValidationStatus] = useState(null);
@@ -13,10 +15,13 @@ export default function LoadingForm() {
     async function validateExcel(url) {
         setLoading(true);
         setValidationStatus("validating");
-        setHelp("Excel link is being validated...");
+        // setHelp("Excel link is being validated...");
+        socket.on('update_proccess', (state) => {
+            setHelp(state);
+        })
 
         try {
-            if (!url.trim()) {
+            if (!isUrl(url.trim())) {
                 throw new Error("Please enter a valid Excel link");
             }
             const response = await axios.post('/api/excel/access', {
@@ -25,14 +30,14 @@ export default function LoadingForm() {
                 password: 'p20030917!1'
             });
             setLoading(false);
-            setHelp("The Excel link is valid");
+            // setHelp("The Excel link is valid");
             // router.replace('/setup');
             window.location.href = '/setup';
             
         } catch (error) {
             setLoading(false);
             setValidationStatus("error");
-            setHelp("The Excel link is invalid");
+            setHelp("There was an error connection to the Excel link. Please try again.");
         }
     }
   
