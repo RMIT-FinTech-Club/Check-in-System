@@ -6,8 +6,8 @@ import os
 import time
 # import requests
 import json
-# import pytesseract
-# import PIL.Image
+import pytesseract
+import PIL.Image
 ## Import socket io publish message function
 from controller.socket.publishMessage import publishMess
 from queue import Queue
@@ -124,6 +124,49 @@ def generate_frames():
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@objectDetection_bp.route('/get_textTesseract')
+def get_textTesseract():
+    # read the image
+    # img = PIL.Image.open("./api/assets/images/screenshot.jpg")
+
+    # Testing with Phuc's image
+    from PIL import Image
+
+    # Read the image with OpenCV
+    img = cv2.imread(r".\\api\\assets\\images\\template.jpg")
+
+    # Convert the image from BGR to RGB
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # Convert the OpenCV image to a PIL Image object
+    img_pil = Image.fromarray(img)
+
+    # Now you can use pytesseract
+    text = pytesseract.image_to_string(img_pil, config=myconfig)
+
+    # format text to (ID, Name)
+    name = ""
+    id = 0
+    print("Printing get_textTesseract")
+    print(text)
+    # Use regular expressions to extract ID and name
+    import re
+    lines = text.split("\n")
+
+    name_pattern = r'([^\d\n]+)'
+    id_pattern = r'(\d+)'
+
+    if lines:
+        name_match = re.search(name_pattern, lines[0])
+        if name_match:
+            name = name_match.group(1).strip()
+
+        id_match = re.search(id_pattern, lines[1])
+        if id_match:
+            id = int(id_match.group(1))
+
+
+    return jsonify({"Name" : name, "ID" : id})
 
 @objectDetection_bp.route('/get_text')
 def get_text():
@@ -152,6 +195,8 @@ def get_text():
 
     response = client.text_detection(image=image, image_context={"language_hints": language_hints})
     texts = response.text_annotations
+    print('Texts:')
+    print(texts)
 
     # results = []  # To store the extracted data as dictionaries
     name = ""
@@ -166,7 +211,6 @@ def get_text():
         if match:
             name = match.group(1).strip()
             id = int(match.group(2))
-            # results.append({"id": id, "name": name})
 
     if response.error.message:
         raise Exception(
