@@ -133,7 +133,11 @@ def get_textTesseract():
     from PIL import Image
 
     # Read the image with OpenCV
-    img = cv2.imread(r".\\api\\assets\\images\\template.jpg")
+    try:
+        img = cv2.imread(r".\\api\\assets\\images\\screenshot.jpg")
+    except FileNotFoundError:
+        print(f"File '{path}' not found.")
+        return jsonify({"error": "File not found."})
 
     # Convert the image from BGR to RGB
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
