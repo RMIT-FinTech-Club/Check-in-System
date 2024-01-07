@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
     <head>
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Checker</title>
+      <title>{metadata.title}</title>
     </head>
     <body className='min-h-screen flex flex-col'>
       <Header />

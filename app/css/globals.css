@@ -48,7 +48,7 @@ html {
 }
 
 .main-content {
-    height: fit-content;
+    height: 70vh;
     padding: 0 0;
     margin-bottom: 0;
     position: relative;
