@@ -14,7 +14,6 @@ html {
     background-color: black;
     margin: 0;
     overflow: hidden;
-    /* Prevent scrolling if the content doesn't exceed the viewport */
 }
 
 .header {
@@ -27,7 +26,6 @@ html {
     z-index: 3;
 }
 
-/* Create a grid overlay */
 .grid-overlay {
     position: absolute;
     top: 0;
@@ -35,7 +33,6 @@ html {
     right: 0;
     bottom: 0;
     z-index: 1;
-    /* Ensures that the grid is above the background but below other content */
     background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1) 1px, transparent 1px, transparent 50px),
         repeating-linear-gradient(-90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1) 1px, transparent 1px, transparent 50px);
     pointer-events: none;
@@ -45,22 +42,17 @@ html {
     position: absolute;
     bottom: 0;
     left: 50%;
-    /* Center horizontally */
     width: 80%;
     transform: translateX(-50%);
-    /* Adjust for centering */
     z-index: 2;
-    /* Ensure it stays behind all other content */
 }
 
-/* Set a higher z-index for all other content to ensure it's on top of the grid */
 .main-content {
     height: fit-content;
     padding: 0 0;
     margin-bottom: 0;
     position: relative;
     z-index: 3;
-    /* Higher than the grid overlay's z-index */
 }
 
 .facebook-icon, .instagram-icon, .tiktok-icon {
@@ -68,5 +60,5 @@ html {
 }
 
 .facebook-icon:hover, .instagram-icon:hover, .tiktok-icon:hover{
-    fill: #ffffff; /* White color on hover */
+    fill: #ffffff;
 }
