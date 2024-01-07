@@ -61,6 +61,8 @@ export default function LoadingForm() {
             position: 'absolute',
             right: '10px', // Adjust this value as needed
             top: '35%',
+            backgroundColor: 'white',
+            color: 'black',
             transform: 'translateY(-50%)',
             }}
             loading={loading}
