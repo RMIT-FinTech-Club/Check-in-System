@@ -62,3 +62,11 @@ html {
     z-index: 3;
     /* Higher than the grid overlay's z-index */
 }
+
+.facebook-icon, .instagram-icon, .tiktok-icon {
+    margin: 0 1rem;
+}
+
+.facebook-icon:hover, .instagram-icon:hover, .tiktok-icon:hover{
+    fill: #ffffff; /* White color on hover */
+}
