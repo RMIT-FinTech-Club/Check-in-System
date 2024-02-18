@@ -4,7 +4,7 @@ export default function Header() {
           <div>
               <img src="/logo.svg" alt="Checker Logo" className="h-8" />
           </div>
-          <div className="flex items-center">
+          <div className="flex items-cente">
               <a href="https://www.facebook.com/rmitfintechclub" className="text-grey-200 hover:text-white-100">
                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-7 h-7 facebook-icon" fill="#90a6b9" viewBox="0 0 585.12 581.58">
                   <path d="M585.12,292.56c0,146.01-107.13,267.06-246.97,289.02v-203.89h68l12.95-84.35h-80.94v-54.73c0-23.09,11.31-45.57,47.54-45.57h36.79v-71.82s-33.4-5.7-65.31-5.7c-66.65,0-110.2,40.4-110.2,113.51v64.29h-74.09v84.35h74.09v203.89C107.15,559.57,0,438.55,0,292.56,0,130.99,130.99,0,292.56,0s292.56,130.97,292.56,292.56Z"></path>

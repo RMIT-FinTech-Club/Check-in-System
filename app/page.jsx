@@ -7,8 +7,8 @@ export default function Home() {
     // Name of the application
     <div className="content text-center">
       <h1 className="text-white-100 h1">
-        <div>Streamlined Student</div>
-        <div>Check-in Solution</div>
+        <p>Streamlined Student</p>
+        <p>Check-in Solution</p>
       </h1>
       <h3 className="text-white-100 p mt-5 mb-10">{metadata.label}</h3>
 
