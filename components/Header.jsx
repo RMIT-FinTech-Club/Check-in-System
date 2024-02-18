@@ -1,6 +1,6 @@
 export default function Header() {
   return (
-      <header className="header flex justify-between items-center bg-black p-4">
+      <header className="header flex justify-between items-center bg-black my-[2rem] xl:mx-[10rem] mx-[5rem]">
           <div>
               <img src="/logo.svg" alt="Checker Logo" className="h-8" />
           </div>

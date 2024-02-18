@@ -18,6 +18,7 @@ export default function Home() {
       <div className="mt-12">
         <img src="./../homepage.svg" alt="Checkin and Excel automation" />
       </div>
+      <img src="/curve.svg" alt="Background Decoration" className='bg-decoration' />
       {/* Description image */}
     </div>
   )

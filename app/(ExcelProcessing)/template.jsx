@@ -20,30 +20,15 @@ export default function Template({children}) {
     const index = getIndex(pathname);
 
     return (
-        <div className="content -mt-10">
-            {/* Title description */}
-            <div className=" flex flex-col text-center">
-                <Link href={'/'}>
-                    <h1 className="h1 text-blue-100 font-jomhuria"> Checker </h1>
-                </Link>
-                <h3 className="h3 mt-2">
-                Your check-in setup is{" "}
-                <span className="text-blue-100 font-bold"> {(index !== 2) ?? 2 - index} </span> {index !== 2 ? "step(s) away" : "ready"}
-                </h3>
-            </div>
-
+        <div className="flex flex-row min-h-[70%] content -mt-10 gap-x-10">
             {/* Setup frame */}
-            <div className="border rounded-3xl shadow border-gray-300 flex flex-col items-center py-10 mt-8">
-                <div className="w-[80%]">
-                    
-                    {/* Step bar */}
-                    <StepBar index={index} />
-
-                    {/* Children page content */}
-                    <div className="mt-5">
-                        {children}
-                    </div>
-                </div>
+            {/* Step bar */}
+            <div className="bg-[#000000] xl:basis-3/12 lg:basis-3/12 basis-1/2 border rounded-3xl shadow border-gray-300 flex content-center lg:pt-[3rem] pt-[2rem] lg:px-[2rem] px-[1rem] mt-8">
+                <StepBar index={index} />
+            </div>
+            <div className="bg-[#000000] xl:basis-9/12 lg:basis-8/12 basis-1/2 border rounded-3xl shadow border-gray-300 flex flex-col items-center py-10 px-10 mt-8">
+                {/* Children page content */}
+                {children}
             </div>
         </div>
     )

@@ -23,7 +23,6 @@ export default function RootLayout({ children }) {
       <main className='main-content flex-grow flex justify-center items-center pt-20'>
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </main>
-      <img src="/curve.svg" alt="Background Decoration" className='bg-decoration' />
       <Footer />
     </body>
     </html>
