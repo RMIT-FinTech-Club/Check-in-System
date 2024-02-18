@@ -8,7 +8,7 @@
 }
 
 .h3 {
-    @apply lg:text-xl text-base font-semibold leading-normal;
+    @apply lg:text-xl text-base font-semibold leading-normal text-white-100;
 }
 
 .p {
@@ -16,7 +16,7 @@
 }
 
 .content {
-    @apply max-w-[1100px] md:w-[70%] w-[75%] mx-auto;
+    @apply max-w-[100%] md:w-[100%] w-[75%] xl:mx-[10rem] mx-[5rem];
 }
 
 
