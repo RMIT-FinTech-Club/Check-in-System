@@ -5,6 +5,60 @@
 @import url('./utility.css');
 
 @font-face {
-    font-family: 'Inter' ;
+    font-family: 'Inter';
     src: url('/fonts/Inter-Regular.ttf');
+}
+
+body,
+html {
+    background-color: black;
+    margin: 0;
+    overflow: hidden;
+}
+
+.header {
+    padding: 2rem 10rem;
+    z-index: 3;
+}
+
+.footer {
+    margin: 0;
+    z-index: 3;
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1) 1px, transparent 1px, transparent 50px),
+        repeating-linear-gradient(-90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1) 1px, transparent 1px, transparent 50px);
+    pointer-events: none;
+}
+
+.bg-decoration {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 80%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.main-content {
+    height: 70vh;
+    padding: 0 0;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 3;
+}
+
+.facebook-icon, .instagram-icon, .tiktok-icon {
+    margin: 0 1rem;
+}
+
+.facebook-icon:hover, .instagram-icon:hover, .tiktok-icon:hover{
+    fill: #ffffff;
 }

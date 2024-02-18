@@ -43,7 +43,7 @@ export default function LoadingForm() {
             help={help}
             style={{width: '100%'}}
             >
-            <Input onChange={(e) => setUrl(e.target.value)} style={{padding: '16px 140px 16px 16px', width: '100%'}} allowClear size="large" placeholder="Connect your Excel link here..." id="error"
+            <Input className="excel_input" onChange={(e) => setUrl(e.target.value)} style={{padding: '16px 140px 16px 16px', width: '100%'}} allowClear size="large" placeholder="Connect your Excel link here..." id="error"
             prefix={
             <svg className="w-5 h-5 text-black-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 19">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.013 7.962a3.519 3.519 0 0 0-4.975 0l-3.554 3.554a3.518 3.518 0 0 0 4.975 4.975l.461-.46m-.461-4.515a3.518 3.518 0 0 0 4.975 0l3.553-3.554a3.518 3.518 0 0 0-4.974-4.975L10.3 3.7"/>
@@ -61,6 +61,8 @@ export default function LoadingForm() {
             position: 'absolute',
             right: '10px', // Adjust this value as needed
             top: '35%',
+            backgroundColor: 'white',
+            color: 'black',
             transform: 'translateY(-50%)',
             }}
             loading={loading}
