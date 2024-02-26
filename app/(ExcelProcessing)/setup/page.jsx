@@ -1,6 +1,6 @@
 "use client";
 
-import { InputNumber, Button, Tooltip } from "antd";
+import { InputNumber, Button, Tooltip, ConfigProvider } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export default function Setup() {
   const [headers, setHeaders] = useState(null);
 
   const [fileName, setFileName] = useState(null);
-  
+
   const [headerPosition, setHeaderPosition] = useState("A1");
 
   // Storing information of all the questions during setup
@@ -73,74 +73,83 @@ export default function Setup() {
 
   async function queryHeaders() {
     try {
-        const response = await axios.post('localhost:3000/api/excel/query-headers', {
-          header_position : headerPosition
-        });
-        const headers = response.data.headers;
-        const queryQuestions = headers.map((header, index) => {
-          return new Question({ title: header, id: index.toString() })
-        });
+      const response = await axios.post('localhost:3000/api/excel/query-headers', {
+        header_position: headerPosition
+      });
+      const headers = response.data.headers;
+      const queryQuestions = headers.map((header, index) => {
+        return new Question({ title: header, id: index.toString() })
+      });
 
-        setQuestions(queryQuestions);
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
+      setQuestions(queryQuestions);
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
   }
 
   async function getFileName() {
     try {
-        const response = await axios.post('/api/excel/get-file-name', {});
-        setFileName(response.data.fileName)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
+      const response = await axios.post('/api/excel/get-file-name', {});
+      setFileName(response.data.fileName)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
   }
 
   return (
     <div>
       <div className="flex justify-between align-middle items-center h3 mb-4">
-          <h2 className="text-blue-100">{fileName}</h2> 
-          <div className="flex justify-center items-center gap-3">
-            <label>Select headers input</label>
-            <input className="p-1 text-sm font-normal border border-gray-300 rounded-md"
-              type="text" placeholder="Header position"
-              onChange={e => setHeaderPosition(e.target.value)} />
-            <Button onClick={queryHeaders}>Confirm</Button>
-          </div>
+        <h2 className="text-blue-100">{fileName}</h2>
+        <div className="flex justify-center items-center gap-3">
+          <label>Select headers input</label>
+          <input className="p-1 text-sm font-normal border border-gray-300 rounded-md"
+            type="text" placeholder="Header position"
+            onChange={e => setHeaderPosition(e.target.value)} />
+          <Button onClick={queryHeaders}>Confirm</Button>
         </div>
+      </div>
 
-        {/* Mapping each question into QuestionForm component */}
-        {questions.map((value, index) => {
-          return (
-              <QuestionForm
-                changeFocus={() => {
-                  updateFocus(value.id);
-                }}
-                currentFocus={currentFocus}
-                key={value.id + value.title} // Add key prop that changes when title changes
-                question={value}
-                deleteQuestion={() => {
-                  deleteQuestion(value.id);
-                }}
-              ></QuestionForm>
-          );
-        })}
-        <div className="flex justify-end mt-4 gap-3">
-          <Tooltip title="Add question">
-            <Button type="primary" icon={<PlusOutlined />} onClick={addQuestion}>
-            </Button>
-          </Tooltip>
-          <Button>Previous</Button>
-          <Button
-            type="primary"
-            className="font-bold"
-            onClick={() => {
-              finishStep(router);
+      {/* Mapping each question into QuestionForm component */}
+      {questions.map((value, index) => {
+        return (
+          <ConfigProvider
+            theme={{
+              token: {
+                colorText: "#ffffff",
+                fontSize: 20,
+              },
             }}
           >
-            Next
+            <QuestionForm
+              changeFocus={() => {
+                updateFocus(value.id);
+              }}
+              currentFocus={currentFocus}
+              key={value.id + value.title} // Add key prop that changes when title changes
+              question={value}
+              deleteQuestion={() => {
+                deleteQuestion(value.id);
+              }}
+            ></QuestionForm>
+          </ConfigProvider>
+        );
+      })}
+      <div className="flex justify-end mt-4 gap-3">
+        <Tooltip title="Add question">
+          <Button type="primary" icon={<PlusOutlined />} onClick={addQuestion}>
           </Button>
-        </div>
+        </Tooltip>
+        <Button>Previous</Button>
+        <Button
+          type="primary"
+          className="font-bold"
+          onClick={() => {
+            finishStep(router);
+          }}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

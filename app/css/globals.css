@@ -119,6 +119,10 @@ html {
     color: #1677ff !important; /* Change the step icon color */
 }
 
+.ant-input-disabled {
+    background-color: #181818 !important; /* Change the disabled input background color */
+}
+
 @media only screen and (max-width: 1024px) {
     .ant-steps-item-title {
         font-size: 1rem !important; /* Make the step title text larger */
