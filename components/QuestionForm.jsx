@@ -80,7 +80,7 @@ export default function QuestionForm({
           <Input
             id={"input" + question.id}
             bordered={edit}
-            className={`mb-4 mt-0 font-bold w-full ${!edit && "h3"}`}
+            className={`mb-4 mt-0 font-bold w-full text-white-100 ${!edit && "h3"}`}
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);

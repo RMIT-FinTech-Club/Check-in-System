@@ -19,11 +19,15 @@ export default function LoadingForm() {
             if (!url.trim()) {
                 throw new Error("Please enter a valid Excel link");
             }
-            const response = await axios.post('/api/excel/access', {
+
+            await axios.post('/api/excel/access', {
                 url: url,
                 email: 'itslamemail@gmail.com',
                 password: 'p20030917!1'
             });
+
+            const response = await axios.get('/api/excelData/thisDataIsDummy');
+
             setLoading(false);
             setHelp("The Excel link is valid");
             // router.replace('/setup');
