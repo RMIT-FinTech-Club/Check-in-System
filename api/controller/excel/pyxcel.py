@@ -13,7 +13,7 @@ import threading
 import time
 import sys
 from Utils.ultils import check_data, catch_error
-sys.path.append('../../Ultils')
+sys.path.append('../../Utils')
 
 pyxcel_bp = Blueprint("pyxcel", __name__)
 pyxcel_thread = threading.local()
@@ -90,7 +90,7 @@ def access_excel():
         return jsonify({'message': 'Somthing was wrong with the password'}), 500
 
     try:
-        next_btn = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+        next_btn = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.ID, 'acceptButton')))
         next_btn.send_keys(Keys.ENTER)
     except TimeoutException:
         return jsonify({'message': 'Could not continue'}), 500
@@ -284,3 +284,64 @@ def add_data_to_new_row():
         return jsonify({'message': f"Error: {str(e)}"}), 500
 
     return jsonify({'message': 'Record added successfully'}), 200
+
+
+# if __name__ == "__main__":
+    # json_data = {
+    #     "url": "https://rmiteduau.sharepoint.com/:x:/r/sites/RMITFinTechClub2023/_layouts/15/Doc.aspx?sourcedoc=%7BE0A89205-2787-4181-BEF8-6535DB1A06D0%7D&file=test.xlsx&action=default&mobileredirect=true",
+    #     "email": 'itslamemail@gmail.com',
+    #     "password": 'p20030917!1'
+    # }
+
+    # # Url
+    # excel_url = json_data.get('url')
+
+    # # Account information
+    # EMAIL = json_data.get('email')
+    # PASSWORD = json_data.get('password')
+
+    # # if not check_data(excel_url, EMAIL, PASSWORD):
+    # #     sys.exit
+
+    # # Create driver
+    # driver = WDS.create_driver(options=create_driver_options())
+    # driver.get(excel_url)
+
+    # # Change iframe state
+    # global iframe_switchable
+    # iframe_switchable = True
+
+    # # email input
+    # try:
+    #     email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0116')))
+    #     email_field.send_keys(EMAIL)
+
+    #     next_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+    #     next_btn.send_keys(Keys.ENTER)
+    # except TimeoutException:
+    #     sys.exit
+
+    # # password input
+    # try:
+    #     email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0118')))
+    #     email_field.send_keys(PASSWORD)
+
+    #     next_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'idSIButton9')))
+    #     next_btn.send_keys(Keys.ENTER)
+    # except TimeoutException:
+    #     sys.exit
+
+    # try:
+    #     next_btn = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.ID, 'acceptButton')))
+    #     next_btn.send_keys(Keys.ENTER)
+    # except TimeoutException:
+    #     sys.exit
+
+    # try:
+    #     switch_to_iframe(driver)
+    #     time.sleep(5)
+    #     action = ActionChains(driver)
+    #     action.send_keys(Keys.ENTER).perform()
+    #     # action.key_down(Keys.CONTROL).send_keys(Keys.HOME).perform()
+    # except Exception:
+    #     sys.exit

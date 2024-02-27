@@ -24,6 +24,51 @@ export default function Setup({ params }) {
         new Question({ title: "Your sID", id: "1", type: "sID" }),
     ]);
 
+    // async function getID(url) {
+    //     try {
+    //         const response = await axios.get('/api/excelData/r/id', {
+    //             url: url,
+    //         });
+    //         console.log(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error)
+    //     }
+    // }
+
+    async function updateQuestions(id) {
+        try {
+            await axios.put(`/api/excelData/r/${id}`, {
+                questions: questions.map(question => {
+                    return {
+                        title: question.title,
+                        type: question.type
+                    }
+                })
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error updating data:', error)
+        }
+    }
+
+    async function queryQuestions(id) {
+        try {
+            const response = await axios.get(`/api/excelData/r/${id}`);
+            const questions = response.data.questions;
+
+            if (questions.length === 0) {
+                return;
+            }
+
+            setQuestions(questions.map((question, index) => {
+                return new Question({ title: question.title, id: index.toString(), type: question.type });
+            }));
+
+        } catch (error) {
+            console.error('Error fetching redis data:', error)
+        }
+    }
+
     const [currentFocus, setCurrentFocus] = useState(null);
     const router = useRouter();
 
@@ -66,9 +111,11 @@ export default function Setup({ params }) {
     /**
      * A function to store questions information and move to the next step
      */
-    function finishStep(router) {
-        localStorage.setItem("questions", JSON.stringify(questions));
-        router.replace("/checkin");
+    async function finishStep(router) {
+        // localStorage.setItem("questions", JSON.stringify(questions));
+        await updateQuestions(params.id);
+        // router.replace(`${params.id}/checkin`);
+        router.replace(`checkin`);
     }
 
     async function queryHeaders() {
@@ -95,6 +142,10 @@ export default function Setup({ params }) {
             console.error('Error fetching data:', error)
         }
     }
+
+    useEffect(() => {
+        queryQuestions(params.id);
+    },[]);
 
     return (
         <div>

@@ -19,8 +19,9 @@ import ManualForm from "@/components/ManualForm";
 import Question from "@/utils/Question";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function first(scannedData) {
+export default function first({scannedData, params}) {
     function typeMapping({ question, options, value }) {
         switch (question) {
             case "Text":
@@ -151,14 +152,25 @@ export default function first(scannedData) {
     const router = useRouter();
 
     // If there is no data, return to step 1
-    if (localStorage.getItem("questions") == null) {
-        return router.replace("/homepage");
-    }
+    // if (localStorage.getItem("questions") == null) {
+    //     return router.replace("/homepage");
+    // }
 
     // Loading the questions information from the local storage
-    const questions = JSON.parse(localStorage.getItem("questions")).map(
-        (val) => new Question(val)
-    );
+    const [questions, setQuestions] = useState([]);
+    async function getQuestions(id) {
+        try {
+            const response = await axios.get(`/api/excelData/r/${id}`);
+            console.log(response.data.questions);
+            setQuestions(response.data.questions);
+        } catch (error) {
+            console.error('Error fetching redis data:', error)
+        }
+    }
+
+    useEffect(() => {
+        getQuestions(params.id);
+    }, []);
 
     return (
         <StyleProvider hashPriority='high'>
