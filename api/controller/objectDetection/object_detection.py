@@ -20,7 +20,9 @@ objectDetection_bp = Blueprint("object-detection", __name__)
 myconfig = r"--psm 6 --oem 3"
 
 # Load images as grayscale
-template = cv2.imread("./api\controller\objectDetection/template.jpg", 0)
+template_path = os.path.join(os.path.dirname(__file__), "template.jpg")
+template = cv2.imread(template_path, 0)
+
 
 # Get template's dimensions
 h, w = template.shape

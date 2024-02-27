@@ -19,15 +19,53 @@ export default function LoadingForm() {
             if (!url.trim()) {
                 throw new Error("Please enter a valid Excel link");
             }
-            const response = await axios.post('/api/excel/access', {
+
+            await axios.post('/api/excel/access', {
                 url: url,
                 email: 'itslamemail@gmail.com',
                 password: 'p20030917!1'
             });
+
+            // Check if url already existed
+            let id;
+            try {
+                // Try getting id from url
+                const response = await axios.get('/api/excelData/r/id', {
+                    params: {
+                        url,
+                    }
+                });
+                id = response.data.id;
+
+            } catch (error) {
+                console.log('Data not yet existed, creating new data');
+
+                // body = {
+                //     url: url,
+                //     questions: []
+                // }
+
+                // Create new data with the url
+                axios.post('/api/excelData/r', {
+                    url: url,
+                    questions: []
+                });
+
+                // Get id from the newly created data
+                const response = await axios.get('/api/excelData/r/id', {
+                    params: {
+                        url,
+                    }
+                });
+
+                id = response.data.id;
+
+            }
+
             setLoading(false);
             setHelp("The Excel link is valid");
             // router.replace('/setup');
-            window.location.href = '/setup';
+            window.location.href = `/${id}/setup`;
             
         } catch (error) {
             setLoading(false);
