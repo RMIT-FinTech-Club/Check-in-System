@@ -1,7 +1,7 @@
 import Question from "@/utils/Question";
 import MultipleChoice from "@/utils/MultipleChoice";
 
-import { Input, Switch, DatePicker, Select, Button } from "antd";
+import { Input, Switch, DatePicker, Select, Button, ConfigProvider } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 /**
@@ -30,19 +30,64 @@ export default function QuestionForm({
   // Mapping each question type into suitable component for displaying
   const typeMapping = {
     Text: (
-      <Input placeholder="Text paragraph" bordered={false} disabled></Input>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorBgContainer: "#181818",
+            colorTextPlaceholder: "#ffffff",
+            fontSize: 14,
+            lineHeight: 2,
+          },
+        }}
+      >
+        <Input placeholder="Text paragraph" disabled></Input>
+      </ConfigProvider>
     ),
-    sID: <Input placeholder="Enter your sID" bordered={false} disabled></Input>,
+    sID:
+      <ConfigProvider
+        theme={{
+          token: {
+            colorBgContainer: "#181818",
+            colorTextPlaceholder: "#ffffff",
+            fontSize: 14,
+            lineHeight: 2,
+          },
+        }}
+      >
+        <Input placeholder="Enter your sID" disabled></Input>
+      </ConfigProvider>,
     Name: (
-      <Input placeholder="Enter your name" bordered={false} disabled></Input>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorBgContainer: "#181818",
+            colorTextPlaceholder: "#ffffff",
+            fontSize: 14,
+            lineHeight: 2,
+          },
+        }}
+      >
+        <Input placeholder="Enter your name" disabled></Input>
+      </ConfigProvider>
     ),
-    Date: <DatePicker bordered={false} />,
+    Date: <DatePicker/>,
     "Multiple choice": (
       <div className="ml-2">
-        <MultipleChoice
-          question={question}
-          edit={currentFocus == question.id}
-        />
+        <ConfigProvider
+          theme={{
+            token: {
+              colorBgContainer: "#181818",
+              colorTextPlaceholder: "#ffffff",
+              fontSize: 14,
+              lineHeight: 2,
+            },
+          }}
+        >
+          <MultipleChoice
+            question={question}
+            edit={currentFocus == question.id}
+          />
+        </ConfigProvider>
       </div>
     ),
   };
@@ -68,9 +113,8 @@ export default function QuestionForm({
 
   return (
     <div
-      className={`border rounded-lg border-gray-300 shadow p-6 mb-4 ${
-        edit && "border-l-8 border-l-blue-100"
-      }`}
+      className={`border rounded-lg border-gray-300 shadow p-6 mb-4 ${edit && "border-l-8 border-l-blue-100"
+        }`}
       onClick={handleFocus}
     >
       {/* Questions that are being edited */}
