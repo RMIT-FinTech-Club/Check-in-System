@@ -129,9 +129,9 @@ export default function first({scannedData, params}) {
 
         await submitDataToRow(Object.values(values));
         form.resetFields();
-        cancelFunc();
-        handleCancel();
-        notifySuccess();
+        // cancelFunc();
+        // handleCancel();
+        // notifySuccess();
     };
 
     // Handling when a form failed to submit
