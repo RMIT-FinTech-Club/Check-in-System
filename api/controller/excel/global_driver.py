@@ -2,6 +2,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.common.exceptions import NoSuchWindowException
+from selenium.webdriver.chrome.service import Service
+import chromedriver_autoinstaller
+# from webdriver_manager.chrome import ChromeDriverManager
 
 class Web_Driver_Singleton():
     __instance: WebDriver = None
@@ -11,6 +14,10 @@ class Web_Driver_Singleton():
         if Web_Driver_Singleton.__instance is not None:
             raise Exception("This class is a singleton!")
         else:
+            # service = Service(ChromeDriverManager().install())
+            chromedriver_autoinstaller.install() # Check if the current version of chromedriver exists
+                                                 # and if it doesn't exist, download it automatically,
+                                                 # then add chromedriver to path
             if options is None:
                 Web_Driver_Singleton.__options = options
             Web_Driver_Singleton.__instance = webdriver.Chrome(options)

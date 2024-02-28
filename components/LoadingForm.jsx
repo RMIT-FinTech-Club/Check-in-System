@@ -15,7 +15,7 @@ export default function LoadingForm() {
     async function validateExcel(url) {
         setLoading(true);
         setValidationStatus("validating");
-        // setHelp("Excel link is being validated...");
+        setHelp("Excel link is being validated...");
         socket.on('update_proccess', (state) => {
             setHelp(state);
         })
@@ -78,7 +78,7 @@ export default function LoadingForm() {
             setHelp("There was an error connection to the Excel link. Please try again.");
         }
     }
-  
+
     return (
       <Form className='relative mt-14'>
         <Form.Item
