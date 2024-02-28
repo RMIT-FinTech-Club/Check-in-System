@@ -45,11 +45,6 @@ export default function LoadingForm() {
             } catch (error) {
                 console.log('Data not yet existed, creating new data');
 
-                // body = {
-                //     url: url,
-                //     questions: []
-                // }
-
                 // Create new data with the url
                 axios.post('/api/excelData/r', {
                     url: url,

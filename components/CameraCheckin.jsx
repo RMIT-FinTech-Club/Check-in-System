@@ -61,7 +61,7 @@ export default function CameraCheckin({ questions }) {
     setIsReceived(false);
   }
 
-  socket.on("message", (res) => {
+  socket.on("message", (_) => {
     setIsReceived(true);
     getScannedData();
   });

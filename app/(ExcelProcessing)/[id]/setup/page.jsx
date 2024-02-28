@@ -72,8 +72,6 @@ export default function Setup({ params }) {
     const [currentFocus, setCurrentFocus] = useState(null);
     const router = useRouter();
 
-    getFileName()
-
     /**
      * A function to delete a question base on its id
      * @param {String} id - The id of the wanted question
@@ -120,7 +118,7 @@ export default function Setup({ params }) {
 
     async function queryHeaders() {
         try {
-            const response = await axios.post('localhost:3000/api/excel/query-headers', {
+            const response = await axios.post('/api/excel/query-headers', {
                 header_position: headerPosition
             });
             const headers = response.data.headers;
@@ -130,7 +128,7 @@ export default function Setup({ params }) {
 
             setQuestions(queryQuestions);
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('Error querying headers:', error)
         }
     }
 
@@ -139,12 +137,13 @@ export default function Setup({ params }) {
             const response = await axios.post('/api/excel/get-file-name', {});
             setFileName(response.data.fileName)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('Error getting file name:', error)
         }
     }
 
     useEffect(() => {
         queryQuestions(params.id);
+        getFileName()
     },[]);
 
     return (
