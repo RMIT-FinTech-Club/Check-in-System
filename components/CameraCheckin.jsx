@@ -94,11 +94,11 @@ export default function CameraCheckin({ questions }) {
               <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={cancelFunc} notifySuccess={notifySuccess} notifyError={notifyError}></ManualForm>
           }
         </Modal>
-        <div className="flex justify-center">
+        <div className="inline">
           <Button
             onClick={showCamera}
-            icon={<CameraOutlined style={{fontSize: '100px'}}/>}
-            style={{width: "150px", height: "130px"}}
+            icon={<CameraOutlined style={{fontSize: '20px', color: '#000000'}}/>}
+            style={{width: "40px", height: "40px"}}
           >
           </Button>
         </div>

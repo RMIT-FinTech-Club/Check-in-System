@@ -86,10 +86,6 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
     setOpen(true);
   };
 
-  const handleCancel = () => {
-    setOpen(false);
-  };
-
   const fillData = () => {
     if (scannedData) {
       form.setFieldsValue({
@@ -116,10 +112,6 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
       {/* Modal for manual input form */}
       <Modal
         open={open}
-        onCancel={() => {
-          handleCancel();
-          cancelFunc();
-        }}
         width={"70%"}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}

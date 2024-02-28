@@ -5,6 +5,126 @@
 @import url('./utility.css');
 
 @font-face {
-    font-family: 'Inter' ;
+    font-family: 'Inter';
     src: url('/fonts/Inter-Regular.ttf');
+}
+
+body,
+html {
+    background-color: black;
+    margin: 0;
+    overflow: hidden;
+}
+
+.header {
+    z-index: 3;
+}
+
+.footer {
+    margin: 0;
+    z-index: 3;
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    background-image: 
+    repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.06), 
+        rgba(255, 255, 255, 0.06) 0.5px, 
+        transparent 0.5px, 
+        transparent 10px
+    ),
+    repeating-linear-gradient(
+        0deg, 
+        rgba(255, 255, 255, 0.06), 
+        rgba(255, 255, 255, 0.06) 0.5px, 
+        transparent 0.5px, 
+        transparent 100px
+    ),
+    repeating-linear-gradient(
+        -90deg, 
+      rgba(255, 255, 255, 0.06), 
+      rgba(255, 255, 255, 0.06) 0.5px, 
+        transparent 0.5px, 
+        transparent 10px
+    ),
+    repeating-linear-gradient(
+        -90deg, 
+      rgba(255, 255, 255, 0.06), 
+      rgba(255, 255, 255, 0.06) 0.5px, 
+        transparent 0.5px, 
+        transparent 100px
+    );
+    pointer-events: none;
+}
+
+.bg-decoration {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 80%;
+    transform: translateX(-50%) translateY(50%);
+    z-index: -1;
+}
+
+.main-content {
+    height: 70vh;
+    padding: 0 0;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 3;
+}
+
+.facebook-icon, .instagram-icon, .tiktok-icon {
+    margin: 0 1rem;
+}
+
+.facebook-icon:hover, .instagram-icon:hover, .tiktok-icon:hover{
+    fill: #ffffff;
+}
+
+.ant-form-item-label > label {
+    font-weight: 600; /* Make the label text bold */
+}
+
+.ant-btn > * {
+    font-weight: 700; /* Make the button text bold */
+}
+
+.ant-steps-item-title {
+    font-size: 1.25rem !important; /* Make the step title text larger */
+    font-weight: 600; /* Make the step title text bold */
+}
+
+.ant-steps-item-icon {
+    border-color: #ffffff !important; /* Change the step icon border color */
+    background-color: black !important; /* Change the step icon background color */
+}
+
+.ant-steps-icon {
+    color: #ffffff !important; /* Change the step icon color */
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+    border-color: #1677ff !important; /* Change the step icon border color */
+}
+
+.ant-steps-item-finish .ant-steps-icon {
+    color: #1677ff !important; /* Change the step icon color */
+}
+
+.ant-input-disabled {
+    background-color: #181818 !important; /* Change the disabled input background color */
+}
+
+@media only screen and (max-width: 1024px) {
+    .ant-steps-item-title {
+        font-size: 1rem !important; /* Make the step title text larger */
+    }
 }

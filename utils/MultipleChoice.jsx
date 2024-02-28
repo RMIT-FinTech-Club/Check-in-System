@@ -53,7 +53,6 @@ export default function MultipleChoice({ question, edit }) {
                 <div className="mr-2">
                   <Input
                     value={value}
-                    bordered={false}
                     style={{ width: 250 }}
                     onChange={(e) => updateOption(index, e.target.value)}
                   ></Input>
