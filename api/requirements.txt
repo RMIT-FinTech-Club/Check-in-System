@@ -44,6 +44,9 @@ python-dotenv==1.0.1
 python-engineio==4.9.0
 python-socketio==5.11.1
 redis==5.0.1
+pytesseract==0.3.10
+python-engineio==4.8.1
+python-socketio==5.10.0
 requests==2.31.0
 rsa==4.9
 selenium==4.11.2
