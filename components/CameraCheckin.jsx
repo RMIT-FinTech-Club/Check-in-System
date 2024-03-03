@@ -24,7 +24,7 @@ export default function CameraCheckin({ questions }) {
 
   // Fetch scan data when received signal
   async function getScannedData() {
-    await fetch("/api/objectDetection/get_text")
+    await fetch("/api/objectDetection/get_textTesseract")
       .then((response) => response.json())
       .then((data) => {
         if (data.ID) {
@@ -75,8 +75,9 @@ export default function CameraCheckin({ questions }) {
             Modal: {
               contentBg: "transparent",
               boxShadow: "none",
+              color: "#000000",
               padding: "0px",
-              colorIcon: "#00000",
+              colorIcon: "#000000",
             },
           },
         }}

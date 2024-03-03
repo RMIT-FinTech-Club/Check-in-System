@@ -28,7 +28,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
   function typeMapping({question, options, value}) {
     switch (question) {
       case "Text":
-        return <Input placeholder="Enter your text"/>;
+        return <Input placeholder="Enter your text" style={{ background: "red" }} />;
       case "sID":
         return <Input placeholder="Enter your sID" />;
       case "Name":

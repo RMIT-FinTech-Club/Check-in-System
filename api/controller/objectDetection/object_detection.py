@@ -135,8 +135,9 @@ def get_textTesseract():
     from PIL import Image
 
     # Read the image with OpenCV
+    path = os.path.join(".", "api", "assets", "images", "screenshot.jpg")
     try:
-        img = cv2.imread(r".\\api\\assets\\images\\screenshot.jpg")
+        img = cv2.imread(path)
     except FileNotFoundError:
         print(f"File '{path}' not found.")
         return jsonify({"error": "File not found."})

@@ -13,174 +13,197 @@ import { useState, useRef } from "react";
  */
 
 export default function QuestionForm({
-  changeFocus,
-  currentFocus,
-  question,
-  deleteQuestion,
+    changeFocus,
+    currentFocus,
+    question,
+    deleteQuestion,
 }) {
-  // Initalizing all the question types, and map it to the selection box
-  const questionTypeList = ["sID", "Name", "Text", "Date", "Multiple choice"];
-  const typeSelection = questionTypeList.map((type) => {
-    return {
-      value: type,
-      label: type,
-    };
-  });
+    // Initalizing all the question types, and map it to the selection box
+    const questionTypeList = ["sID", "Name", "Text", "Date", "Multiple choice"];
+    const typeSelection = questionTypeList.map((type) => {
+        return {
+            value: type,
+            label: type,
+        };
+    });
 
-  // Mapping each question type into suitable component for displaying
-  const typeMapping = {
-    Text: (
-      <ConfigProvider
-        theme={{
-          token: {
-            colorBgContainer: "#181818",
-            colorTextPlaceholder: "#ffffff",
-            fontSize: 14,
-            lineHeight: 2,
-          },
-        }}
-      >
-        <Input placeholder="Text paragraph" disabled></Input>
-      </ConfigProvider>
-    ),
-    sID:
-      <ConfigProvider
-        theme={{
-          token: {
-            colorBgContainer: "#181818",
-            colorTextPlaceholder: "#ffffff",
-            fontSize: 14,
-            lineHeight: 2,
-          },
-        }}
-      >
-        <Input placeholder="Enter your sID" disabled></Input>
-      </ConfigProvider>,
-    Name: (
-      <ConfigProvider
-        theme={{
-          token: {
-            colorBgContainer: "#181818",
-            colorTextPlaceholder: "#ffffff",
-            fontSize: 14,
-            lineHeight: 2,
-          },
-        }}
-      >
-        <Input placeholder="Enter your name" disabled></Input>
-      </ConfigProvider>
-    ),
-    Date: <DatePicker/>,
-    "Multiple choice": (
-      <div className="ml-2">
-        <ConfigProvider
-          theme={{
-            token: {
-              colorBgContainer: "#181818",
-              colorTextPlaceholder: "#ffffff",
-              fontSize: 14,
-              lineHeight: 2,
-            },
-          }}
-        >
-          <MultipleChoice
-            question={question}
-            edit={currentFocus == question.id}
-          />
-        </ConfigProvider>
-      </div>
-    ),
-  };
-  const inputRef = useRef(null);
-
-  /**
-   * Will be called during an onclick event on the current QuestionForm component,
-   * which will highlight the component, as well as enabling question editing
-   */
-  function handleFocus() {
-    if (edit == true) return;
-    inputRef.current.focus({ cursor: "end" });
-    changeFocus();
-  }
-
-  const [title, setTitle] = useState(question.title);
-  const [type, setType] = useState(question.type);
-  const [required, setRequired] = useState(question.required);
-  // const [choice, setChoice] = useState([]);
-
-  // Checking whether the currentFocus is the ID of the current focus, if true then highlight and enable editing
-  let edit = currentFocus == question.id;
-
-  return (
-    <div
-      className={`border rounded-lg border-gray-300 shadow p-6 mb-4 ${edit && "border-l-8 border-l-blue-100"
-        }`}
-      onClick={handleFocus}
-    >
-      {/* Questions that are being edited */}
-      <div className="flex gap-8">
-        <div className="grow">
-          {/* {edit ? ( */}
-          <Input
-            id={"input" + question.id}
-            bordered={edit}
-            className={`mb-4 mt-0 font-bold w-full text-white-100 ${!edit && "h3"}`}
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              question.title = e.target.value;
-            }}
-            label={"Question"}
-            ref={inputRef}
-          ></Input>
-          {/* ) : ( */}
-          {/* <h3 className={` ${edit && "hidden"}`}>{title}</h3> */}
-          {/* )} */}
-          <br />
-
-          {/* Mapping the type of question to the suitable answering box */}
-          <div className="mt-3 -ml-2">{typeMapping[type]}</div>
-        </div>
-        {/* Selection box for choosing question type */}
-        <div className="grow-0">
-          {edit && (
-            <Select
-              size="middle"
-              options={typeSelection}
-              value={type}
-              style={{ width: "200px" }}
-              onChange={(val) => {
-                setType(val);
-                question.type = val;
-              }}
-            ></Select>
-          )}
-        </div>
-      </div>
-      {edit && (
-        <>
-          <hr className="mt-1 mb-3" />
-          <div className="flex justify-end items-center gap-3 text-black-200">
-            <Button
-              type="text"
-              shape="circle"
-              onClick={deleteQuestion}
-              icon={<DeleteOutlined />}
-            ></Button>
-            <div>
-              <label className="mr-2">Required</label>
-              <Switch
-                checked={required}
-                size="small"
-                onClick={(e) => {
-                  question.required = e;
-                  setRequired((required) => !required);
+    // Mapping each question type into suitable component for displaying
+    const typeMapping = {
+        Text: (
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorBgContainer: "#181818",
+                        colorTextPlaceholder: "#ffffff",
+                        fontSize: 14,
+                        lineHeight: 2,
+                    },
                 }}
-              />
+            >
+                <Input placeholder="Text paragraph" disabled></Input>
+            </ConfigProvider>
+        ),
+        sID:
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorBgContainer: "#181818",
+                        colorTextPlaceholder: "#ffffff",
+                        fontSize: 14,
+                        lineHeight: 2,
+                    },
+                }}
+            >
+                <Input placeholder="Enter your sID" disabled></Input>
+            </ConfigProvider>,
+        Name: (
+            <ConfigProvider
+                theme={{
+                    token: {
+                        colorBgContainer: "#181818",
+                        colorTextPlaceholder: "#ffffff",
+                        fontSize: 14,
+                        lineHeight: 2,
+                    },
+                }}
+            >
+                <Input placeholder="Enter your name" disabled></Input>
+            </ConfigProvider>
+        ),
+        Date: <DatePicker />,
+        "Multiple choice": (
+            <div className="ml-2">
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            colorBgContainer: "#181818",
+                            colorTextPlaceholder: "#ffffff",
+                            fontSize: 14,
+                            lineHeight: 2,
+                        },
+                    }}
+                >
+                    <MultipleChoice
+                        question={question}
+                        edit={currentFocus == question.id}
+                    />
+                </ConfigProvider>
             </div>
-          </div>
-        </>
-      )}
-    </div>
-  );
+        ),
+    };
+    const inputRef = useRef(null);
+
+    /**
+     * Will be called during an onclick event on the current QuestionForm component,
+     * which will highlight the component, as well as enabling question editing
+     */
+    function handleFocus() {
+        if (edit == true) return;
+        inputRef.current.focus({ cursor: "end" });
+        changeFocus();
+    }
+
+    const [title, setTitle] = useState(question.title);
+    const [type, setType] = useState(question.type);
+    const [required, setRequired] = useState(question.required);
+    // const [choice, setChoice] = useState([]);
+
+    // Checking whether the currentFocus is the ID of the current focus, if true then highlight and enable editing
+    let edit = currentFocus == question.id;
+
+    return (
+        <div
+            className={`border flex flex-col gap-4 rounded-lg border-gray-300 shadow p-6 mb-4 ${edit && "border-l-8 border-l-blue-100"
+                }`}
+            onClick={handleFocus}
+        >
+            {/* Questions that are being edited */}
+            <div className="flex flex-col gap-4">
+                <div className="flex gap-8">
+                    {/* {edit ? ( */}
+                    <Input
+                        id={"input" + question.id}
+                        bordered={edit}
+                        className={`mb-4 mt-0 font-bold w-full ${!edit && "h3"}`}
+                        value={title}
+                        style={{
+                            color: "black",
+                            backgroundColor: "white",
+                        }}
+                        onChange={(e) => {
+                            setTitle(e.target.value);
+                            question.title = e.target.value;
+                        }}
+                        label={"Question"}
+                        ref={inputRef}
+                    ></Input>
+                    {/* ) : ( */}
+                    {/* <h3 className={` ${edit && "hidden"}`}>{title}</h3> */}
+                    {/* )} */}
+                    {/* <br /> */}
+                    {/* Selection box for choosing question type */}
+                    <div className="">
+                        <Select
+                            size="middle"
+                            options={typeSelection}
+                            value={type}
+                            // style={{ width: "200px" }}
+                            onChange={(val) => {
+                                setType(val);
+                                question.type = val;
+                            }}
+                        ></Select>
+                    </div>
+
+                    {/* Mapping the type of question to the suitable answering box
+                    <div className="mt-3 -ml-2">{typeMapping[type]}</div> */}
+                </div>
+                {/* Mapping the type of question to the suitable answering box */}
+                <div className="">{typeMapping[type]}</div>
+                {/* Selection box for choosing question type */}
+                {/* <div className="grow-0">
+                    {edit && (
+                        <Select
+                            size="middle"
+                            options={typeSelection}
+                            value={type}
+                            style={{ width: "200px" }}
+                            onChange={(val) => {
+                                setType(val);
+                                question.type = val;
+                            }}
+                        ></Select>
+                    )}
+                </div> */}
+            </div>
+            {edit && (
+                <>
+                    <div className="flex justify-end items-center gap-2 text-black-200">
+                        <Button
+                            type="text"
+                            shape="circle"
+                            style={{
+                                backgroundColor: "transparent",
+                                color: "white",
+                            }}
+                            onClick={deleteQuestion}
+                            icon={<DeleteOutlined />}
+                        ></Button>
+                        <div>
+                            <label className="mr-2">Required</label>
+                            <Switch
+                                checked={required}
+                                size="small"
+                                style={{ backgroundColor: required ? "#096DD980" : "#ffffff40" }}
+                                onClick={(e) => {
+                                    question.required = e;
+                                    setRequired((required) => !required);
+                                }}
+                            />
+                        </div>
+                    </div>
+                </>
+            )}
+        </div>
+    );
 }
