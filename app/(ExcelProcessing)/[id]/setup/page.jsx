@@ -148,7 +148,7 @@ export default function Setup({ params }) {
 
     return (
         <div>
-            <div className="flex justify-between align-middle items-center h3 mb-4">
+            <div className="flex justify-between align-middle items-center h3 mb-4 gap-2">
                 <h2 className="text-blue-100">{fileName}</h2>
                 <div className="flex justify-center items-center gap-3">
                     <label>Select headers input</label>
