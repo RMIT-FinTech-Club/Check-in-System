@@ -23,6 +23,9 @@ dependencies:
   axios:
     specifier: ^1.4.0
     version: 1.6.7
+  bufferutil:
+    specifier: ^4.0.8
+    version: 4.0.8
   concurrently:
     specifier: ^8.0.1
     version: 8.0.1
@@ -52,7 +55,7 @@ dependencies:
     version: 7.8.1
   socket.io-client:
     specifier: ^4.7.2
-    version: 4.7.4(utf-8-validate@6.0.3)
+    version: 4.7.4(bufferutil@4.0.8)(utf-8-validate@6.0.3)
   tailwindcss:
     specifier: 3.3.2
     version: 3.3.2
@@ -920,6 +923,14 @@ packages:
       update-browserslist-db: 1.0.11(browserslist@4.21.5)
     dev: false
 
+  /bufferutil@4.0.8:
+    resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
+    engines: {node: '>=6.14.2'}
+    requiresBuild: true
+    dependencies:
+      node-gyp-build: 4.8.0
+    dev: false
+
   /bundle-name@3.0.0:
     resolution: {integrity: sha512-PKA4BeSvBpQKQ8iPOGCSiell+N8P+Tf1DlwqmYhpe2gAhKPHn8EYOxVT+ShuGmhg8lN8XiSlS80yiExKXrURlw==}
     engines: {node: '>=12'}
@@ -1242,13 +1253,13 @@ packages:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
     dev: false
 
-  /engine.io-client@6.5.3(utf-8-validate@6.0.3):
+  /engine.io-client@6.5.3(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-9Z0qLB0NIisTRt1DZ/8U2k12RJn8yls/nXMZLn+/N8hANT3TcYjKFKcwbw5zFQiN4NTde3TSY9zb79e1ij6j9Q==}
     dependencies:
       '@socket.io/component-emitter': 3.1.0
       debug: 4.3.4
       engine.io-parser: 5.2.2
-      ws: 8.11.0(utf-8-validate@6.0.3)
+      ws: 8.11.0(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       xmlhttprequest-ssl: 2.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -3834,13 +3845,13 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /socket.io-client@4.7.4(utf-8-validate@6.0.3):
+  /socket.io-client@4.7.4(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-wh+OkeF0rAVCrABWQBaEjLfb7DVPotMbu0cgWgyR0v6eA4EoVnAwcIeIbcdTE3GT/H3kbdLl7OoH2+asoDRIIg==}
     engines: {node: '>=10.0.0'}
     dependencies:
       '@socket.io/component-emitter': 3.1.0
       debug: 4.3.4
-      engine.io-client: 6.5.3(utf-8-validate@6.0.3)
+      engine.io-client: 6.5.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       socket.io-parser: 4.2.4
     transitivePeerDependencies:
       - bufferutil
@@ -4349,7 +4360,7 @@ packages:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: false
 
-  /ws@8.11.0(utf-8-validate@6.0.3):
+  /ws@8.11.0(bufferutil@4.0.8)(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -4361,6 +4372,7 @@ packages:
       utf-8-validate:
         optional: true
     dependencies:
+      bufferutil: 4.0.8
       utf-8-validate: 6.0.3
     dev: false
 
