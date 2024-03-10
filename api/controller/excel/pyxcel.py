@@ -22,10 +22,11 @@ pyxcel_thread = threading.local()
 # load_dotenv("../../.env.local")
 # iframe_switchable = True
 
-iframe = ''
+iframe: str = ''
 def switch_to_iframe(driver):
     # global iframe_switchable
     iframe_list = ['#WebApplicationFrame', '#WacFrame_Excel_0']
+    global iframe
     if iframe:
         try:
             # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')

@@ -3,7 +3,7 @@ import json
 import uuid
 from flask import Blueprint, request, jsonify
 from pymongo.mongo_client import MongoClient
-from urllib.parse import quote_plus, quote
+from urllib.parse import quote_plus, unquote, quote
 from bson import ObjectId
 
 excel_data_bp = Blueprint("excel_data", __name__)
@@ -78,13 +78,17 @@ def update_question(id: str):
 @excel_data_bp.route('/db/id', methods=['GET'])
 def get_id():
     url = request.args.get('url')
-    url = quote(url, safe=':/?=&')
+    # questions = request.get_json().get('url', None)
+    # url = quote(url, safe='')
+
+    # print(url)
+    # print("https://rmiteduau.sharepoint.com/:x:/r/sites/RMITFinTechClub2023/_layouts/15/Doc.aspx?sourcedoc%3D%257BE0A89205-2787-4181-BEF8-6535DB1A06D0%257D%26file%3Dtest.xlsx%26action%3Ddefault%26mobileredirect%3Dtrue")
 
     if url is None:
         return jsonify({'message': 'no url provided'}), 400
 
     id = excel_data_col.find_one({'url': url})
-    print(id)
+    # print(id)
     if id:
         return jsonify({'message': 'Id retrived', 'id': str(id.get('_id')) }), 200
     else:

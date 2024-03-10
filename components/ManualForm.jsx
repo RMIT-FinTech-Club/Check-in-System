@@ -120,6 +120,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
             padding: "0px",
             borderRadius: "12px",
         }}
+        onCancel={cancelFunc}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
       >

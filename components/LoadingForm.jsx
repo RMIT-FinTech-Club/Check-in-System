@@ -35,7 +35,7 @@ export default function LoadingForm() {
             let id;
             try {
                 // Try getting id from url
-                const response = await axios.get('/api/excelData/r/id', {
+                const response = await axios.get('/api/excelData/db/id', {
                     params: {
                         url,
                     }
@@ -46,13 +46,13 @@ export default function LoadingForm() {
                 console.log('Data not yet existed, creating new data');
 
                 // Create new data with the url
-                axios.post('/api/excelData/r', {
+                axios.post('/api/excelData/db', {
                     url: url,
                     questions: []
                 });
 
                 // Get id from the newly created data
-                const response = await axios.get('/api/excelData/r/id', {
+                const response = await axios.get('/api/excelData/db/id', {
                     params: {
                         url,
                     }

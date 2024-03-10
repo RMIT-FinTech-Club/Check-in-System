@@ -24,20 +24,9 @@ export default function Setup({ params }) {
         new Question({ title: "Your sID", id: "1", type: "sID" }),
     ]);
 
-    // async function getID(url) {
-    //     try {
-    //         const response = await axios.get('/api/excelData/r/id', {
-    //             url: url,
-    //         });
-    //         console.log(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error)
-    //     }
-    // }
-
     async function updateQuestions(id) {
         try {
-            await axios.put(`/api/excelData/r/${id}`, {
+            await axios.put(`/api/excelData/db/${id}`, {
                 questions: questions.map(question => {
                     return {
                         title: question.title,
@@ -53,7 +42,7 @@ export default function Setup({ params }) {
 
     async function queryQuestions(id) {
         try {
-            const response = await axios.get(`/api/excelData/r/${id}`);
+            const response = await axios.get(`/api/excelData/db/${id}`);
             const questions = response.data.questions;
 
             if (questions.length === 0) {

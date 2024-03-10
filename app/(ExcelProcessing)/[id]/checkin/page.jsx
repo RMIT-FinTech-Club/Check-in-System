@@ -160,7 +160,7 @@ export default function first({scannedData, params}) {
     const [questions, setQuestions] = useState([]);
     async function getQuestions(id) {
         try {
-            const response = await axios.get(`/api/excelData/r/${id}`);
+            const response = await axios.get(`/api/excelData/db/${id}`);
             console.log(response.data.questions);
             setQuestions(response.data.questions);
         } catch (error) {
