@@ -9,6 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from .excelActions import ExcelActions, ActionTypes, Direction
 from .global_driver import Web_Driver_Singleton as WDS
 from flask import Blueprint, request, jsonify
+from socketManager import socketio
 import threading
 import time
 import sys
@@ -21,16 +22,29 @@ pyxcel_thread = threading.local()
 # load_dotenv("../../.env.local")
 # iframe_switchable = True
 
-
+iframe: str = ''
 def switch_to_iframe(driver):
     # global iframe_switchable
-    try:
-        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
-        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
-        driver.switch_to.frame(iframe_element)
-        # iframe_switchable = False
-    except NoSuchElementException:
-        pass
+    iframe_list = ['#WebApplicationFrame', '#WacFrame_Excel_0']
+    global iframe
+    if iframe:
+        try:
+            # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
+            iframe_element = driver.find_element(By.CSS_SELECTOR, iframe)
+            driver.switch_to.frame(iframe_element)
+            # iframe_switchable = False
+        except NoSuchElementException:
+            pass
+    else:
+        for iframe in iframe_list:
+            try:
+                iframe_element = driver.find_element(By.CSS_SELECTOR, iframe)
+                driver.switch_to.frame(iframe_element)
+                iframe = iframe
+                # iframe_switchable = False
+                break
+            except NoSuchElementException:
+                pass
 
 
 def create_driver_options() -> Options:
@@ -44,11 +58,13 @@ def create_driver_options() -> Options:
 # Routes
 @pyxcel_bp.route('/')
 def index():
+    print(WDS.get_driver())
     return "Excel api index page"
 
 
 @pyxcel_bp.route('/access', methods=['POST'])
 def access_excel():
+    socketio.emit('update_proccess', 'Validating url')
     json_data = request.json
 
     # Url
@@ -62,13 +78,16 @@ def access_excel():
         return 'Not enough data input'
 
     # Create driver
-    driver = WDS.create_driver(options=create_driver_options())
-    driver.get(excel_url)
+    WDS.create_driver(options=create_driver_options())
+    # driver.get(excel_url)
+    WDS.connect_url(excel_url)
+    driver = WDS.get_driver()
 
     # Change iframe state
     global iframe_switchable
     iframe_switchable = True
 
+    socketio.emit('update_proccess', 'Logging into Excel')
     # email input
     try:
         email_field = WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.ID, 'i0116')))
@@ -95,6 +114,7 @@ def access_excel():
     except TimeoutException:
         return jsonify({'message': 'Could not continue'}), 500
 
+    socketio.emit('update_proccess', 'Excel accessed successfully')
     try:
         switch_to_iframe(driver)
         time.sleep(5)
@@ -160,6 +180,7 @@ def go_to_cell():
     switch_to_iframe(driver)
 
     try:
+        print("Go to cell")
         ExcelActions.go_to_cell(driver, cell_position)
         # ExcelActions.tp_to_cell(driver, cell_position)
     except Exception:
@@ -172,6 +193,7 @@ def go_to_cell():
 @pyxcel_bp.route('/add-data', methods=['POST'])
 def add_data():
     driver = WDS.get_driver()
+    print(driver)
     if not driver:
         return jsonify({'message': 'driver request failed'}), 500
 
@@ -205,10 +227,13 @@ def get_file_name():
 
     # Switch to iframe if possible
     switch_to_iframe(driver)
+    
+    print("Switched to iframe and debugging")
 
     try:
+        print("Try finding")
         file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span'))).get_attribute('textContent')
-
+        print("FOUND")
     except TimeoutException:
         return jsonify({'message': 'Couldnt locate the element'}), 500
 
@@ -252,6 +277,7 @@ def query_header():
 @pyxcel_bp.route('/add-data-to-new-row', methods=['POST'])
 def add_data_to_new_row():
     driver = WDS.get_driver()
+    print(driver)
     if not driver:
         return jsonify({'message': 'driver request failed'}), 500
 
@@ -260,7 +286,8 @@ def add_data_to_new_row():
     if not data:
         return jsonify({'message': 'data not provided'}), 500
 
-    switch_to_iframe(driver) 
+    switch_to_iframe(driver)
+    print("Switched to iframe and debugging")
 
     try:
         # Navigate downwards until an empty first column cell is found

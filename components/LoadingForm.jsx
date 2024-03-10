@@ -3,6 +3,8 @@
 import { Button, Form, Input } from "antd"
 import axios from "axios";
 import { useState } from "react";
+import socket from "lib/socketManager";
+import isUrl from "is-url";
 
 export default function LoadingForm() {
     const [validationStatus, setValidationStatus] = useState(null);
@@ -14,9 +16,12 @@ export default function LoadingForm() {
         setLoading(true);
         setValidationStatus("validating");
         setHelp("Excel link is being validated...");
+        socket.on('update_proccess', (state) => {
+            setHelp(state);
+        })
 
         try {
-            if (!url.trim()) {
+            if (!isUrl(url.trim())) {
                 throw new Error("Please enter a valid Excel link");
             }
 
@@ -30,7 +35,7 @@ export default function LoadingForm() {
             let id;
             try {
                 // Try getting id from url
-                const response = await axios.get('/api/excelData/r/id', {
+                const response = await axios.get('/api/excelData/db/id', {
                     params: {
                         url,
                     }
@@ -40,19 +45,14 @@ export default function LoadingForm() {
             } catch (error) {
                 console.log('Data not yet existed, creating new data');
 
-                // body = {
-                //     url: url,
-                //     questions: []
-                // }
-
                 // Create new data with the url
-                axios.post('/api/excelData/r', {
+                axios.post('/api/excelData/db', {
                     url: url,
                     questions: []
                 });
 
                 // Get id from the newly created data
-                const response = await axios.get('/api/excelData/r/id', {
+                const response = await axios.get('/api/excelData/db/id', {
                     params: {
                         url,
                     }
@@ -63,17 +63,17 @@ export default function LoadingForm() {
             }
 
             setLoading(false);
-            setHelp("The Excel link is valid");
+            // setHelp("The Excel link is valid");
             // router.replace('/setup');
             window.location.href = `/${id}/setup`;
             
         } catch (error) {
             setLoading(false);
             setValidationStatus("error");
-            setHelp("The Excel link is invalid");
+            setHelp("There was an error connection to the Excel link. Please try again.");
         }
     }
-  
+
     return (
       <Form className='relative mt-14'>
         <Form.Item

@@ -5,7 +5,7 @@ from controller.excel.pyxcel import pyxcel_bp
 from controller.objectDetection.object_detection import objectDetection_bp
 from controller.db.excel_data import excel_data_bp
 # Import socket intialize object
-from controller.socket.socketio import socketio
+from socketManager import socketio
 
 app = Flask(__name__)
 # CORS(app)

@@ -17,6 +17,7 @@ import Question from "@/utils/Question";
 import validateUtils from "@/utils/formValidator";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Col } from "antd";
 
 /**
  * A component for user to manually fill out form for the checkin process
@@ -28,13 +29,13 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
   function typeMapping({question, options, value}) {
     switch (question) {
       case "Text":
-        return <Input placeholder="Enter your text"/>;
+        return <Input placeholder="Enter your text" style={{color: "#ffffff", border: "2px solid #fff", backgroundColor: "#181818"}} />;
       case "sID":
-        return <Input placeholder="Enter your sID" />;
+        return <Input placeholder="Enter your sID" style={{color: "#ffffff", border: "2px solid #fff", backgroundColor: "#181818"}} />;
       case "Name":
-        return <Input placeholder="Enter your name" />;
+        return <Input placeholder="Enter your name" style={{color: "#ffffff", border: "2px solid #fff", backgroundColor: "#181818"}} />;
       case "Date":
-        return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" />;
+        return <DatePicker format={"DD/MM/YYYY"} placement="bottomLeft" style={{color: "#ffffff", border: "2px solid #fff", backgroundColor: "#181818"}} />;
       case "Multiple choice":
         return <Select
           placeholder="Enter your option"
@@ -69,7 +70,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
     await submitDataToRow(Object.values(values));
     form.resetFields();
     cancelFunc();
-    handleCancel();
+    // handleCancel();
     notifySuccess();
   };
 
@@ -104,7 +105,7 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
             borderRadiusLG: "0px",
           },
           Modal: {
-            contentBg: "#ffffff",
+            colorBorder: "#ffffff",
           },
         },
       }}
@@ -113,6 +114,13 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
       <Modal
         open={open}
         width={"70%"}
+        style={{
+            backgroundColor: "#000000",
+            border: "2px solid #ffffff",
+            padding: "0px",
+            borderRadius: "12px",
+        }}
+        onCancel={cancelFunc}
         okButtonProps={{ style: { display: "none" } }}
         cancelButtonProps={{ style: { display: "none" } }}
       >

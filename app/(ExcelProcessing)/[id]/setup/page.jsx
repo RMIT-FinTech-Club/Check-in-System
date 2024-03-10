@@ -24,20 +24,9 @@ export default function Setup({ params }) {
         new Question({ title: "Your sID", id: "1", type: "sID" }),
     ]);
 
-    // async function getID(url) {
-    //     try {
-    //         const response = await axios.get('/api/excelData/r/id', {
-    //             url: url,
-    //         });
-    //         console.log(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error)
-    //     }
-    // }
-
     async function updateQuestions(id) {
         try {
-            await axios.put(`/api/excelData/r/${id}`, {
+            await axios.put(`/api/excelData/db/${id}`, {
                 questions: questions.map(question => {
                     return {
                         title: question.title,
@@ -53,7 +42,7 @@ export default function Setup({ params }) {
 
     async function queryQuestions(id) {
         try {
-            const response = await axios.get(`/api/excelData/r/${id}`);
+            const response = await axios.get(`/api/excelData/db/${id}`);
             const questions = response.data.questions;
 
             if (questions.length === 0) {
@@ -71,8 +60,6 @@ export default function Setup({ params }) {
 
     const [currentFocus, setCurrentFocus] = useState(null);
     const router = useRouter();
-
-    getFileName()
 
     /**
      * A function to delete a question base on its id
@@ -120,7 +107,7 @@ export default function Setup({ params }) {
 
     async function queryHeaders() {
         try {
-            const response = await axios.post('localhost:3000/api/excel/query-headers', {
+            const response = await axios.post('/api/excel/query-headers', {
                 header_position: headerPosition
             });
             const headers = response.data.headers;
@@ -130,7 +117,7 @@ export default function Setup({ params }) {
 
             setQuestions(queryQuestions);
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('Error querying headers:', error)
         }
     }
 
@@ -139,17 +126,18 @@ export default function Setup({ params }) {
             const response = await axios.post('/api/excel/get-file-name', {});
             setFileName(response.data.fileName)
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error('Error getting file name:', error)
         }
     }
 
     useEffect(() => {
         queryQuestions(params.id);
+        getFileName()
     },[]);
 
     return (
         <div>
-            <div className="flex justify-between align-middle items-center h3 mb-4">
+            <div className="flex justify-between align-middle items-center h3 mb-4 gap-2">
                 <h2 className="text-blue-100">{fileName}</h2>
                 <div className="flex justify-center items-center gap-3">
                     <label>Select headers input</label>

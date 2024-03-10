@@ -21,7 +21,8 @@ export default function Page() {
     async function accessExcel() {
         try {
             const response = await axios.post('/api/excel/access', {
-                url: 'https://rmiteduau.sharepoint.com/:x:/r/sites/RMITFinTechClub2023/Shared%20Documents/2023%20FinTech%20Club%20Master%20Folder/Sem%20B/Departments/Technology/Computer%20Vision%20Project/Book.xlsx?d=wc133eaeca703446686947dd77f977172&csf=1&web=1&e=Tl81AC',
+                // url: 'https://rmiteduau.sharepoint.com/:x:/r/sites/RMITFinTechClub2023/Shared%20Documents/2023%20FinTech%20Club%20Master%20Folder/Sem%20B/Departments/Technology/Computer%20Vision%20Project/Book.xlsx?d=wc133eaeca703446686947dd77f977172&csf=1&web=1&e=Tl81AC',
+                url: 'https://rmiteduau.sharepoint.com/:x:/r/sites/RMITFinTechClub2023/_layouts/15/Doc.aspx?sourcedoc=%7BE0A89205-2787-4181-BEF8-6535DB1A06D0%7D&file=test.xlsx&action=default&mobileredirect=true',
                 email: 'itslamemail@gmail.com',
                 password: 'p20030917!1'
             });
@@ -110,7 +111,7 @@ export default function Page() {
     return (
         <div className="content">
             <h1>This will test the api</h1>
-            {responseData && <p>{JSON.stringify(responseData, null, 2)}</p>}
+            {responseData && <p className="text-white-100">{JSON.stringify(responseData, null, 2)}</p>}
             <div className="mt-4 [&>*]:m-2">
                 <Button onClick={accessExcel}>Access Excel</Button>
                 <Button onClick={testExcel}>Test Excel</Button>

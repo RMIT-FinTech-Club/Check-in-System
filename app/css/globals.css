@@ -13,7 +13,7 @@ body,
 html {
     background-color: black;
     margin: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .header {
@@ -74,7 +74,7 @@ html {
 }
 
 .main-content {
-    height: 70vh;
+    /* height: 70vh; */
     padding: 0 0;
     margin-bottom: 0;
     position: relative;
