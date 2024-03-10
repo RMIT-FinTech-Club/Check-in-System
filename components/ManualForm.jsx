@@ -69,9 +69,9 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
 
     await submitDataToRow(Object.values(values));
     form.resetFields();
-    // cancelFunc();
+    cancelFunc();
     // handleCancel();
-    // notifySuccess();
+    notifySuccess();
   };
 
   // Handling when a form failed to submit

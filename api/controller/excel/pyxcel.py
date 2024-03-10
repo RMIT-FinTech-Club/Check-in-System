@@ -22,16 +22,28 @@ pyxcel_thread = threading.local()
 # load_dotenv("../../.env.local")
 # iframe_switchable = True
 
-
+iframe = ''
 def switch_to_iframe(driver):
     # global iframe_switchable
-    try:
-        # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
-        iframe_element = driver.find_element(By.CSS_SELECTOR, '#WacFrame_Excel_0')
-        driver.switch_to.frame(iframe_element)
-        # iframe_switchable = False
-    except NoSuchElementException:
-        pass
+    iframe_list = ['#WebApplicationFrame', '#WacFrame_Excel_0']
+    if iframe:
+        try:
+            # iframe_element = driver.find_element(By.CSS_SELECTOR, '#WebApplicationFrame')
+            iframe_element = driver.find_element(By.CSS_SELECTOR, iframe)
+            driver.switch_to.frame(iframe_element)
+            # iframe_switchable = False
+        except NoSuchElementException:
+            pass
+    else:
+        for iframe in iframe_list:
+            try:
+                iframe_element = driver.find_element(By.CSS_SELECTOR, iframe)
+                driver.switch_to.frame(iframe_element)
+                iframe = iframe
+                # iframe_switchable = False
+                break
+            except NoSuchElementException:
+                pass
 
 
 def create_driver_options() -> Options:
