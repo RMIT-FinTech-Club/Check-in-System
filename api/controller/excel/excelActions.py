@@ -254,6 +254,20 @@ class ExcelActions:
             vertical_key_perform()
 
     @staticmethod
+    def get_current_position(driver: WebDriver) -> str:
+        """Get current cell position
+
+        Args:
+            driver (WebDriver): webdriver object
+
+        Returns:
+            str: current cell position
+        """
+        cell_location = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#FormulaBar-NameBox-input'))).get_attribute('value')
+
+        return cell_location
+
+    @staticmethod
     def get_cell_data(driver: WebDriver) -> str:
         cell_text = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#formulaBarTextDivId_textElement > div'))).get_attribute('textContent')
 

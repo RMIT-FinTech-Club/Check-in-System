@@ -255,7 +255,6 @@ def query_header():
     switch_to_iframe(driver)
 
     try:
-        # file_name = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#documentTitle > span > span.documentTitle-254'))).get_attribute('textContent')
         headers = []
         ExcelActions.ctrl_home(driver)
         ExcelActions.go_to_cell(driver, header_position)
@@ -312,6 +311,22 @@ def add_data_to_new_row():
 
     return jsonify({'message': 'Record added successfully'}), 200
 
+
+@pyxcel_bp.route('/get-current-cell-position', methods=['GET'])
+def get_current_cell_position():
+    driver = WDS.get_driver()
+    if not driver:
+        return jsonify({'message': 'driver request failed'}), 500
+
+    switch_to_iframe(driver)
+
+    try:
+        cell_position = ExcelActions.get_current_position(driver)
+    except Exception:
+        return jsonify({'message': 'Could not get the cell position'}), 500
+
+    return jsonify({'message': 'Cell position queried successfully',
+                    'cell_position': cell_position}), 200
 
 # if __name__ == "__main__":
     # json_data = {
