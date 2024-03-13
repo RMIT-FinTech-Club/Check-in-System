@@ -1,3 +1,4 @@
+import uuid
 import cv2
 from flask import Blueprint, Response, send_file, jsonify, request, redirect
 from socketManager import socketio
@@ -86,6 +87,9 @@ def generate_frames():
                 elapsed_time = time.time() - start_time
                 if elapsed_time >= duration_threshold:
                     # Save image
+                    # UUID for unique file name
+                    file_name = str(uuid.uuid4()) + ".jpg"
+                    cv2.imwrite(f"./api/assets/data/{file_name}", frame)
                     screenshot = frame[(frame_middleY + spacing - 5):(frame_middleY + (h // 2) + spacing), (frame_middleX - (w // 2) - spacing):(frame_middleX + (w // 6))]
 
 
