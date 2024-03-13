@@ -82,13 +82,16 @@ def generate_frames():
             if start_time is None:
                 start_time = time.time()
             else:
+                print("YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
                 # Check if timer has reached threshold
                 elapsed_time = time.time() - start_time
+                print(str(elapsed_time) + " AND " + str(duration_threshold))
                 if elapsed_time >= duration_threshold:
                     # Save image
                     screenshot = frame[(frame_middleY + spacing - 5):(frame_middleY + (h // 2) + spacing), (frame_middleX - (w // 2) - spacing):(frame_middleX + (w // 6))]
 
 
+                    print("YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe")
                     cv2.imwrite("./api/assets/images/screenshot.jpg", screenshot)
 
                     # Emit message to client with message only
@@ -141,6 +144,8 @@ def get_textTesseract():
     except FileNotFoundError:
         print(f"File '{path}' not found.")
         return jsonify({"error": "File not found."})
+    
+    print("Printing get_textTesseract: " + str(img))
 
     # Convert the image from BGR to RGB
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

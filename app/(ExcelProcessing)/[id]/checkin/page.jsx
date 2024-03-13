@@ -109,6 +109,8 @@ export default function first({scannedData, params}) {
     const [form] = Form.useForm(); // Storing the reference to the form
 
     async function submitDataToRow(result) {
+        print(result);
+        console.log(result);
         try {
             const response = await axios.post('/api/excel/add-data-to-new-row', {
                 data: result

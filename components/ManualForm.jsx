@@ -48,11 +48,17 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
   }
   const [form] = Form.useForm(); // Storing the reference to the form
 
+  let location = null;
   async function submitDataToRow(result) {
     try {
         const response = await axios.post('/api/excel/add-data-to-new-row', {
-            data: result 
+            data: result,
+            location
         });
+        const posRes = await axios.get('/api/excel/get-current-cell-position');
+        const posResData = posRes.data;
+        const location = posResData['cell_position'] || '';
+        console.log('Current cell position:', location);
     } catch (error) {
         console.error('Error submitting data:', error);
     }

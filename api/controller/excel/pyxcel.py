@@ -276,7 +276,7 @@ def query_header():
 @pyxcel_bp.route('/add-data-to-new-row', methods=['POST'])
 def add_data_to_new_row():
     driver = WDS.get_driver()
-    print(driver)
+    # print(driver)
     if not driver:
         return jsonify({'message': 'driver request failed'}), 500
 
@@ -284,14 +284,22 @@ def add_data_to_new_row():
     data = json_data.get('data')
     if not data:
         return jsonify({'message': 'data not provided'}), 500
+    
+    location = json_data.get('location')
 
     switch_to_iframe(driver)
     print("Switched to iframe and debugging")
 
     try:
-        # Navigate downwards until an empty first column cell is found
-        # Start from A1 as it's the first cell of the first column
-        ExcelActions.go_to_cell(driver, 'A1')
+        if not location:
+            # If location is not provided, start from A1 as it's the first cell of the first column
+            # Navigate downwards until an empty first column cell is found
+            ExcelActions.go_to_cell(driver, 'A1')
+        else:
+            print("Yes cell")
+            # If location is provided, go to the specified cell
+            ExcelActions.go_to_cell(driver, location)
+
         ExcelActions.shift_row(driver, Direction.DOWN, until=ActionTypes.EMPTY_CELL)
 
         # At this point, we should be in the first column of an empty row, ready to input data
