@@ -158,7 +158,9 @@ def get_textTesseract():
     print(text)
     # Use regular expressions to extract ID and name
     import re
-    lines = text.split("\n")
+    lines: list = text.split("\n")
+    if len(lines) < 2:
+        return jsonify({"error": "Not enough data captured, something might have been wrong with the image."}), 400
 
     name_pattern = r'([^\d\n]+)'
     id_pattern = r'(\d+)'
@@ -173,7 +175,7 @@ def get_textTesseract():
             id = int(id_match.group(1))
 
 
-    return jsonify({"Name" : name, "ID" : id})
+    return jsonify({"Name" : name, "ID" : id}), 200
 
 @objectDetection_bp.route('/get_text')
 def get_text():

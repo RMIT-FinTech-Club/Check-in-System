@@ -46,6 +46,7 @@ export default function CameraCheckin({ questions }) {
     const [cameraOpen, setCameraOpen] = useState(false);
     const [isReceived, setIsReceived] = useState(false);
     const [scannedData, setScannedData] = useState(null);
+    const [dataErr, setDataErr] = useState(false);
     const [api, contextHolder] = notification.useNotification(); // Managing pop up message when submit form
 
     const showCamera = () => {
@@ -62,9 +63,14 @@ export default function CameraCheckin({ questions }) {
     }
 
     socket.on("message", (_) => {
+        if (!getScannedData()) {
+            setDataErr(true);
+            console.log("Failed to extract data, maybe try scanning again?");
+            return;
+        }
+
         setIsReceived(true);
         setCameraOpen(false);
-        getScannedData();
     });
 
     return (
@@ -90,6 +96,7 @@ export default function CameraCheckin({ questions }) {
                     okButtonProps={{ style: { display: "none" } }}
                     cancelButtonProps={{ style: { display: "none" } }}>
                     <WebcamFeed />
+                    {dataErr && <p>Failed to extract data, maybe try scanning again?</p>}
                 </Modal>
                 {
                     (isReceived && scannedData) &&
