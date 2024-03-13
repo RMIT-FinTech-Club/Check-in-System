@@ -24,7 +24,7 @@ import { Col } from "antd";
  */
 
 
-export default function ManualForm({ questions, isOpen, scannedData, cancelFunc, notifySuccess, notifyError}) {
+export default function ManualForm({ questions, isOpen, scannedData, cancelFunc, notifySuccess, notifyError, location, setLocation}) {
 
   function typeMapping({question, options, value}) {
     switch (question) {
@@ -48,11 +48,23 @@ export default function ManualForm({ questions, isOpen, scannedData, cancelFunc,
   }
   const [form] = Form.useForm(); // Storing the reference to the form
 
+  // Make a variable here to be used in submitDataToRow
   async function submitDataToRow(result) {
     try {
-        const response = await axios.post('/api/excel/add-data-to-new-row', {
-            data: result 
+        const reponse = await axios.post('/api/excel/add-data-to-new-row', {
+            data: result,
+            location: location,
         });
+
+        const data = reponse.data;
+        const position = data['cell_position'];
+        // Extract number from postition string
+        console.log('Data submitted successfully:', position, "and global data is", location);
+        if (setLocation) {
+            setLocation(position)
+        }
+        console.log('[2] Data submitted successfully:', position, "and global data is", location);
+
     } catch (error) {
         console.error('Error submitting data:', error);
     }

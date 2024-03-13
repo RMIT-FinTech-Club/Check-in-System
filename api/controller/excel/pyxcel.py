@@ -284,14 +284,25 @@ def add_data_to_new_row():
     data = json_data.get('data')
     if not data:
         return jsonify({'message': 'data not provided'}), 500
+    
+    location = json_data.get('location')
+    print(json_data)
 
     switch_to_iframe(driver)
     print("Switched to iframe and debugging")
+    
+    global cell_location
+    cell_location = None
 
     try:
-        # Navigate downwards until an empty first column cell is found
-        # Start from A1 as it's the first cell of the first column
-        ExcelActions.go_to_cell(driver, 'A1')
+        if location:
+            ExcelActions.go_to_cell(driver, location)
+        else:
+            # Navigate downwards until an empty first column cell is found
+            # Start from A1 as it's the first cell of the first column
+            ExcelActions.go_to_cell(driver, 'A1')
+
+        # time.sleep(0.5)
         ExcelActions.shift_row(driver, Direction.DOWN, until=ActionTypes.EMPTY_CELL)
 
         # At this point, we should be in the first column of an empty row, ready to input data
@@ -305,11 +316,14 @@ def add_data_to_new_row():
         ExcelActions.shift_column(driver, Direction.LEFT, by_column=len(data))
         ExcelActions.shift_row(driver, Direction.DOWN, until=ActionTypes.NTH_CELL, nth_row=1)
 
+        time.sleep(0.5)
+        cell_location = ExcelActions.get_current_position(driver)
+
     except Exception as e:
         # Return a more detailed error message for debugging
         return jsonify({'message': f"Error: {str(e)}"}), 500
 
-    return jsonify({'message': 'Record added successfully'}), 200
+    return jsonify({'message': 'Record added successfully', 'cell_position': cell_location}), 200
 
 
 @pyxcel_bp.route('/get-current-cell-position', methods=['GET'])

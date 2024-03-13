@@ -106,6 +106,9 @@ export default function first({scannedData, params}) {
                 </ConfigProvider>;
         }
     }
+
+    const [location, setLocation] = useState(null);
+
     const [form] = Form.useForm(); // Storing the reference to the form
 
     async function submitDataToRow(result) {
@@ -268,7 +271,7 @@ export default function first({scannedData, params}) {
                         <Form.Item>
                             <div className="flex justify-end gap-4">
                                 {/* Camera Popup modal */}
-                                <CameraCheckin questions={questions}></CameraCheckin>
+                                <CameraCheckin location={location} setLocation={setLocation} questions={questions}></CameraCheckin>
                                 <ConfigProvider
                                     theme={{
                                         token: {

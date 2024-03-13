@@ -39,5 +39,7 @@ yarn-error.log*
 next-env.d.ts
 __pycache__
 
+/api/assets/data/*.jpg
+
 # API Keys
 # api/assets/api-keys/*

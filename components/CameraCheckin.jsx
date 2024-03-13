@@ -5,7 +5,7 @@ import ManualForm from "@/components/ManualForm";
 import { WebcamFeed } from "./ObjectDetection";
 import { io } from "socket.io-client";
 
-export default function CameraCheckin({ questions }) {
+export default function CameraCheckin({ questions, location, setLocation }) {
     function notifySuccess() {
         api['success']({
             message: "Success",
@@ -46,7 +46,7 @@ export default function CameraCheckin({ questions }) {
     const [cameraOpen, setCameraOpen] = useState(false);
     const [isReceived, setIsReceived] = useState(false);
     const [scannedData, setScannedData] = useState(null);
-    const [dataErr, setDataErr] = useState(false);
+    // const [dataErr, setDataErr] = useState(false);
     const [api, contextHolder] = notification.useNotification(); // Managing pop up message when submit form
 
     const showCamera = () => {
@@ -63,14 +63,16 @@ export default function CameraCheckin({ questions }) {
     }
 
     socket.on("message", (_) => {
-        if (!getScannedData()) {
-            setDataErr(true);
-            console.log("Failed to extract data, maybe try scanning again?");
-            return;
-        }
-
+        // if (!getScannedData()) {
+        //     setDataErr(true);
+        //     console.log("Failed to extract data, maybe try scanning again?");
+        //     return;
+        // }
+        getScannedData();
         setIsReceived(true);
         setCameraOpen(false);
+        console.log(isReceived);
+        console.log(scannedData);
     });
 
     return (
@@ -96,11 +98,11 @@ export default function CameraCheckin({ questions }) {
                     okButtonProps={{ style: { display: "none" } }}
                     cancelButtonProps={{ style: { display: "none" } }}>
                     <WebcamFeed />
-                    {dataErr && <p>Failed to extract data, maybe try scanning again?</p>}
+                    {/* {dataErr && <p>Failed to extract data, maybe try scanning again?</p>} */}
                 </Modal>
                 {
                     (isReceived && scannedData) &&
-                    <ManualForm scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={cancelFunc} notifySuccess={notifySuccess} notifyError={notifyError}></ManualForm>
+                    <ManualForm location={location} setLocation={setLocation} scannedData={scannedData} questions={questions} isOpen={isReceived} cancelFunc={cancelFunc} notifySuccess={notifySuccess} notifyError={notifyError}></ManualForm>
                 }
                 <div className="inline">
                     <Button
