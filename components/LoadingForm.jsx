@@ -27,8 +27,8 @@ export default function LoadingForm() {
 
             await axios.post('/api/excel/access', {
                 url: url,
-                email: 'itslamemail@gmail.com',
-                password: 'p20030917!1'
+                email: 's3977856@rmit.edu.vn',
+                password: 'Thesunrise2603%&*'
             });
 
             // Check if url already existed
@@ -70,7 +70,12 @@ export default function LoadingForm() {
         } catch (error) {
             setLoading(false);
             setValidationStatus("error");
-            setHelp("There was an error connection to the Excel link. Please try again.");
+
+            if (error.code === 'ECONNABORTED') {
+                setHelp("The request timed out. Please try again.");
+            } else {
+                setHelp("The Excel link is invalid");
+            };
         }
     }
 

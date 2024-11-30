@@ -39,33 +39,53 @@ messages = Queue(maxsize=1)
 def generate_frames():
     camera = cv2.VideoCapture(0)  # Access the camera (0 for default camera)
 
+    if not camera.isOpened():
+        print("Error: Camera not found or can't be opened.")
+        return
+    else:
+        print("Camera initialized successfully.")
+
     # Timer variables
     start_time = None
-    duration_threshold = 0.8 # Time in seconds to capture image
+    duration_threshold = 3.0  # Time in seconds to capture image
 
     while True:
         success, frame = camera.read()
 
+        # Check if the frame was read correctly
+        if not success or frame is None:
+            print("Error: Failed to grab frame")
+            break
+
         # Convert the frame to grayscale
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        try:
+            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        except cv2.error as e:
+            print(f"Error converting frame to grayscale: {e}")
+            continue
 
         img2 = frame.copy()
 
-        # method results in a 2d array of all the possible matches (0 - 1)
+        # Ensure 'template', 'methods', 'w', and 'h' are defined before using them
+        if 'template' not in globals() or 'w' not in globals() or 'h' not in globals():
+            print("Error: 'template', 'w', or 'h' are not defined.")
+            break
+
+        # Method results in a 2D array of all possible matches (0-1)
         result = cv2.matchTemplate(gray_frame, template, methods[0])
 
-        # this method gives the location and value of the minimum and maximum values
+        # This method gives the location and value of the minimum and maximum values
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
         location = max_loc
 
-        # determining bottom right of the match by adding w and h
+        # Determining bottom right of the match by adding w and h
         bottom_right = (location[0] + w, location[1] + h)
 
-        # Draw rectangle around matching shape
+        # Draw rectangle around matching shape (optional, but useful for debugging)
         # cv2.rectangle(img2, location, bottom_right, (0, 255, 0), 3)
 
-        # getting middle values and spacing for screenshot (For not missing any text)
+        # Getting middle values and spacing for screenshot (For not missing any text)
         frame_middleX = frame.shape[1] // 2
         frame_middleY = frame.shape[0] // 2
         spacing = 30
@@ -74,11 +94,15 @@ def generate_frames():
         center_x = location[0] + w // 2
         center_y = location[1] + h // 2
 
-        # If center of shape is withing center of frame + spacing
-        if (frame_middleX - spacing <= center_x <= frame_middleX + spacing) and (frame_middleY - spacing <= center_y <= frame_middleY + spacing):
-            # Center of shape is within center of frame + spacing, draw green rectangle
-            cv2.rectangle(img2, (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), (0, 255, 0), 2)
-            
+        # If the center of the shape is within the center of the frame + spacing
+        if (frame_middleX - spacing <= center_x <= frame_middleX + spacing) and \
+           (frame_middleY - spacing <= center_y <= frame_middleY + spacing):
+            # Draw green rectangle if center is within the frame
+            cv2.rectangle(img2, 
+                          (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), 
+                          (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), 
+                          (0, 255, 0), 2)
+
             # If timer is not running, start it
             if start_time is None:
                 start_time = time.time()
@@ -87,44 +111,43 @@ def generate_frames():
                 elapsed_time = time.time() - start_time
                 if elapsed_time >= duration_threshold:
                     # Save image
-                    # UUID for unique file name
                     file_name = str(uuid.uuid4()) + ".jpg"
                     cv2.imwrite(f"./api/assets/data/{file_name}", frame)
-                    screenshot = frame[(frame_middleY + spacing - 5):(frame_middleY + (h // 2) + spacing), (frame_middleX - (w // 2) - spacing):(frame_middleX + (w // 6))]
-
-
-                    cv2.imwrite("./api/assets/images/screenshot.jpg", screenshot)
-
-                    # Emit message to client with message only
-                    # socketio.emit("screenshot_saved", {"message": "Screenshot taken."}, namespace='/objectDetection')
                     
-                    # Redirect user to /get_text
-
+                    # Screenshot for additional processing (if needed)
+                    screenshot = frame[(frame_middleY + spacing - 5):(frame_middleY + (h // 2) + spacing), 
+                                        (frame_middleX - (w // 2) - spacing):(frame_middleX + (w // 6))]
+                    cv2.imwrite("./api/assets/images/screenshot.jpg", screenshot)
 
                     # Reset timer
                     start_time = None
-                    # break
-                    # return (redirect("/test-api"))
-                    ## Test socket io publish message
-                    publishMess()
-                    ## Test sse (if the messages queue is empty, then put a new message to the queue)
-                    if (messages.empty()): messages.put("1")
-                    
+
+                    # Publish message or handle further logic
+                    publishMess()  # Assuming this function is defined
+                    if messages.empty():
+                        messages.put("1")  # Assuming 'messages' is a queue
+
         else:
             # Center of shape is not within center of frame + spacing, draw red rectangle, reset timer
-            cv2.rectangle(img2, (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), (0, 0, 255), 2)
+            cv2.rectangle(img2, 
+                          (frame_middleX - (w // 2) - spacing, frame_middleY - (h // 2) - spacing), 
+                          (frame_middleX + (w // 2) + spacing, frame_middleY + (h // 2) + spacing), 
+                          (0, 0, 255), 2)
             # Reset timer
             start_time = None
 
         img2 = cv2.flip(img2, 1)
-        # showing the image with rectangle drawn
 
+        # Check if the frame was successfully captured and is valid
         if not success:
             break
+        
+        # Encode the frame to JPEG and yield it as part of the stream
         _, buffer = cv2.imencode('.jpg', img2)
         frame_data = buffer.tobytes()
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame_data + b'\r\n')
-    # return send_file("./api/assets/images/screenshot.jpg", mimetype='image/jpg')
+
+    camera.release()  # Release the camera when done
 
 @objectDetection_bp.route('/video_feed')
 def video_feed():
@@ -154,6 +177,8 @@ def get_textTesseract():
 
     # Now you can use pytesseract
     text = pytesseract.image_to_string(img_pil, config=myconfig)
+    print("Print results")
+    print(text)
 
     # format text to (ID, Name)
     name = ""
@@ -162,6 +187,8 @@ def get_textTesseract():
     print(text)
     # Use regular expressions to extract ID and name
     import re
+    # Replace consecutive newlines with a single newline
+    text = re.sub(r'\n+', '\n', text)
     lines: list = text.split("\n")
     if len(lines) < 2:
         return jsonify({"error": "Not enough data captured, something might have been wrong with the image."}), 400
@@ -169,17 +196,34 @@ def get_textTesseract():
     name_pattern = r'([^\d\n]+)'
     id_pattern = r'(\d+)'
 
-    if lines:
-        name_match = re.search(name_pattern, lines[0])
-        if name_match:
-            name = name_match.group(1).strip()
+    # Try to extract name from the first two lines (in case it spans two lines)
+    if len(lines) > 1:
+        # Try matching the name in the first two lines
+        name_match_1 = re.search(name_pattern, lines[0])
+        name_match_2 = re.search(name_pattern, lines[1])
 
+        if name_match_1:
+            name = name_match_1.group(1).strip()
+
+        if name_match_2:
+            if name:
+                name += " " + name_match_2.group(1).strip()
+            else:
+                name = name_match_2.group(1).strip()
+
+    # Extract ID from the appropriate line(s)
+    if len(lines) > 5:
+        id_match = re.search(id_pattern, lines[2])
+        if id_match:
+            id = int(id_match.group(1))
+    elif len(lines) > 4:
+        # Handle the case where ID is on the second line
         id_match = re.search(id_pattern, lines[1])
         if id_match:
             id = int(id_match.group(1))
 
 
-    return jsonify({"Name" : name, "ID" : id}), 200
+    return jsonify({"Name" : name, "ID" : id, "OCR Text": text}), 200
 
 @objectDetection_bp.route('/get_text')
 def get_text():

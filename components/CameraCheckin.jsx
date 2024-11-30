@@ -27,9 +27,11 @@ export default function CameraCheckin({ questions }) {
         await fetch("/api/objectDetection/get_textTesseract")
             .then((response) => response.json())
             .then((data) => {
+                console.log(data);
                 if (data.ID) {
                     setScannedData(data);
                 }
+                console.log("Scanned data: ", scannedData);
             })
             .catch((err) => console.log(err));
     }
